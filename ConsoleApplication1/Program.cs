@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using OfficeOpenXml;
+using DataUpload.Controllers;
 
 
 namespace ConsoleApplication1
@@ -16,72 +17,88 @@ namespace ConsoleApplication1
             ValidationChecker mapChecker = new ValidationChecker();
             List<string> fileHeaders = new List<string>();
               fileHeaders.Add("NSM");                //---------------------cell1
-              fileHeaders.Add("NSMZone");            //---------------------cell2
-              fileHeaders.Add("NSMEmailId");         //---------------------cell3
-              fileHeaders.Add("NSMSecondaryEmailId");//---------------------cell4
-              fileHeaders.Add("ZSM");                //---------------------cell5
-              fileHeaders.Add("ZSMEmailId");         //---------------------cell6
-              fileHeaders.Add("ZSMZone");            //---------------------cell7
-              fileHeaders.Add("ZSMSecondaryEmailId");//---------------------cell8
-              fileHeaders.Add("RSM");                //---------------------cell9
-              fileHeaders.Add("RSMEmailId");         //---------------------cell10
-              fileHeaders.Add("RSMSecondaryEmailId");//---------------------cell11
-              fileHeaders.Add("ASM");                //---------------------cell12
-              fileHeaders.Add("ASMEmailId");         //---------------------cell13
-              fileHeaders.Add("ASMZone");            //---------------------cell14
-              fileHeaders.Add("ASMSecondaryEmailId");//---------------------cell15
-              fileHeaders.Add("ESM");                //---------------------cell16
-              fileHeaders.Add("ESMEmailId");         //---------------------cell17
-              fileHeaders.Add("ESMZone");            //---------------------cell18
-              fileHeaders.Add("ESMSecondaryEmailId");//---------------------cell19
-              fileHeaders.Add("ESMContactNumber");   //---------------------cell20
-              fileHeaders.Add("ESMHQ");              //---------------------cell21
-              fileHeaders.Add("FinalBeatName");      //---------------------cell22
-              fileHeaders.Add("BeatErpId");          //---------------------cell23
-              fileHeaders.Add("BeatDistrict");       //---------------------cell24
-              fileHeaders.Add("BeatState");          //---------------------cell25
-              fileHeaders.Add("BeatZone");           //---------------------cell26
-              fileHeaders.Add("DistributorName");    //---------------------cell27
-              fileHeaders.Add("DistributorLocation");//---------------------cell28
-              fileHeaders.Add("DistributorErpId");   //---------------------cell29
-              fileHeaders.Add("DistributorEmailId"); //---------------------cell20*/
+              fileHeaders.Add("NSMZone");
+            fileHeaders.Add("FinalBeatName");
+            fileHeaders.Add("ZSM");
+            //---------------------cell2
+            /*   fileHeaders.Add("NSMEmailId");         //---------------------cell3
+               fileHeaders.Add("NSMSecondaryEmailId");//---------------------cell4
+               fileHeaders.Add("ZSM");                //---------------------cell5
+               fileHeaders.Add("ZSMEmailId");         //---------------------cell6
+               fileHeaders.Add("ZSMZone");            //---------------------cell7
+               fileHeaders.Add("ZSMSecondaryEmailId");//---------------------cell8
+               fileHeaders.Add("RSM");                //---------------------cell9
+               fileHeaders.Add("RSMEmailId");         //---------------------cell10
+               fileHeaders.Add("RSMSecondaryEmailId");//---------------------cell11
+               fileHeaders.Add("ASM");                //---------------------cell12
+               fileHeaders.Add("ASMEmailId");         //---------------------cell13
+               fileHeaders.Add("ASMZone");            //---------------------cell14
+               fileHeaders.Add("ASMSecondaryEmailId");//---------------------cell15
+               fileHeaders.Add("ESM");                //---------------------cell16
+               fileHeaders.Add("ESMEmailId");         //---------------------cell17
+               fileHeaders.Add("ESMZone");            //---------------------cell18
+               fileHeaders.Add("ESMSecondaryEmailId");//---------------------cell19
+               fileHeaders.Add("ESMContactNumber");   //---------------------cell20
+               fileHeaders.Add("ESMHQ");              //---------------------cell21
+               fileHeaders.Add("FinalBeatName");      //---------------------cell22
+               fileHeaders.Add("BeatErpId");          //---------------------cell23
+               fileHeaders.Add("BeatDistrict");       //---------------------cell24
+               fileHeaders.Add("BeatState");          //---------------------cell25
+               fileHeaders.Add("BeatZone");           //---------------------cell26
+               fileHeaders.Add("DistributorName");    //---------------------cell27
+               fileHeaders.Add("DistributorLocation");//---------------------cell28
+               fileHeaders.Add("DistributorErpId");   //---------------------cell29
+               fileHeaders.Add("DistributorEmailId"); //---------------------cell20*/
             try
             {
                 var file = new FileInfo(Path);
                 ExcelPackage package = new ExcelPackage(file);
                 ExcelWorksheet sheet = package.Workbook.Worksheets[1];
-
-
-                var header = sheet.Cells[sheet.Dimension.Start.Row, sheet.Dimension.Start.Column, 1, sheet.Dimension.End.Column];
+                var header = sheet.Cells[1, 1, 1, sheet.Dimension.End.Column];
                 var fileField = sheet.Cells[sheet.Dimension.Start.Row, sheet.Dimension.Start.Column, sheet.Dimension.End.Row, sheet.Dimension.End.Column];
                 List<string> headerCheck = new List<string>();
-                foreach (var item in header)
+                for(int i=0;i<sheet.Dimension.End.Column;i++)
                 {
-                    headerCheck.Add(item.Value.ToString().Trim());
-                    
+
+                    headerCheck.Add(((object[,])fileField.Value)[0, i].ToString());
+
+
                 }
-                IEnumerable<string> difference = fileHeaders.Except(headerCheck);            
+                var difference = headerCheck.Except(fileHeaders);            
                 if (difference.Any())
                 {
                     Console.WriteLine("Set the Headers correctly");
+                    Console.ReadKey();
                     return;
                 }
                 
-                  for (int i = sheet.Dimension.Start.Row - 1; i <= sheet.Dimension.End.Row - 1; i++)                 //To find Empty cells.(algo will be updated)
+                  for (int i = sheet.Dimension.Start.Column - 1; i <= sheet.Dimension.End.Column - 1; i++) //To find Empty cells.(algo will be updated)
                   {
-                      for (int j = sheet.Dimension.Start.Column - 1; j < sheet.Dimension.End.Column - 1; j++)
-                      {
-                          if (((object[,])fileField.Value)[i, j] == null)
-                          {
-                              var index = ((object[,])fileField.Value)[i, j];
-                              Console.WriteLine("There is an empty field at index at row={0} coloumn={1} ", i, j + 1);
-                              return;                              
-                          }
-                      }
-                  }                
-                mapChecker.Checker(sheet);
-                Console.WriteLine("reachedfinally");
-                Console.ReadKey();                
+                   if( ((object[,])fileField.Value)[0, i].ToString().Trim() == "FinalBeatName")
+                    {
+                        for (int j = sheet.Dimension.Start.Row - 1; j <= sheet.Dimension.End.Row - 1; j++)
+                        {
+                            if (((object[,])fileField.Value)[j, i] == null)
+                            {
+                                var index = ((object[,])fileField.Value)[j, i];
+                                Console.WriteLine("There is an empty field at index  for FinalBeatName  at row={0} coloumn={1} ", j+1,i+1);
+                                Console.ReadKey();
+                                return;
+                            }
+                        }
+                    }
+                      
+                  }
+                Console.WriteLine("Hello");                
+                mapChecker.Checker(sheet);//mapping checking
+
+                Console.WriteLine("succcess");                
+                var fileinfo = new FileInfo(@"C:\Docs\Visual Studio 2015\Projects\DataUpload\DataUpload\Seed Data\file.csv");
+                package.SaveAs(fileinfo);
+                UploadController upload = new UploadController();
+                MemoryStream memory = new MemoryStream();
+                
+                //  Console.ReadKey();                
             }
             catch (Exception ex)
             {
@@ -93,7 +110,7 @@ namespace ConsoleApplication1
         }       
         static void Main(string[] args)
         {
-            DataRead(@"C:\Users\Lenovo\Documents\Visual Studio 2015\Projects\DataUpload\DataUpload\Seed Data\test (6).xlsx");            
+            DataRead(@"C:\Docs\Visual Studio 2015\Projects\DataUpload\DataUpload\Seed Data\test.xlsx");            
         }
     }    
 }
