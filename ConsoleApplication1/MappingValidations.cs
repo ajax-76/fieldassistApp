@@ -9,7 +9,7 @@ namespace ConsoleApplication1
 {
     class MappingValidations
     {
-        public void One2ManyValidationCheck(ExcelWorksheet file, int flag_coloumn, int map_coloumn)
+        public void One2ManyValidationCheck(ExcelWorksheet file, int flag_coloumn, int map_coloumn,string flagString,string mapString)
         {
             // var flagCell = file.Cells[start_row, start_coloumn];
             for (int i = file.Dimension.Start.Row+1; i <= file.Dimension.End.Row; i++)
@@ -27,7 +27,7 @@ namespace ConsoleApplication1
                             var y = file.Cells[j, flag_coloumn];
                             if ( y.Value!= flag.Value)
                             {
-                                Console.WriteLine("many to many map is incorrect between at row: {0} coloumn:{1} and row: {2} coloumn: {3}", j, flag_coloumn, j, map_coloumn);
+                                Console.WriteLine("one to many map is incorrect between at row: {0} coloumn:{1} and row: {2} coloumn: {3} for "+flagString+"and"+mapString+"" ,j, flag_coloumn, j, map_coloumn);
                                 Console.ReadKey();
                             }
                         }
@@ -54,10 +54,7 @@ namespace ConsoleApplication1
                                 Console.ReadKey();
                             }
                         }
-                        else
-                        {
-                            
-                        }
+                        
                     }
                 }
             }

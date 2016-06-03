@@ -31,6 +31,26 @@ namespace ConsoleApplication1
                 {
                     indexer.ZSM = i + 1;
                 }
+                if (((object[,])file.Value)[0, i].ToString().Trim() == "FinalBeatName")
+                {
+                    indexer.FinalBeatName = i + 1;
+                }
+                if (((object[,])file.Value)[0, i].ToString().Trim() == "BeatState")
+                {
+                    indexer.BeatZone = i + 1;
+                }
+                if (((object[,])file.Value)[0, i].ToString().Trim() == "BeatZone")
+                {
+                    indexer.BeatState = i + 1;
+                }
+                if (((object[,])file.Value)[0, i].ToString().Trim() == "DistributorName")
+                {
+                    indexer.DistributorName = i + 1;
+                }
+                if (((object[,])file.Value)[0, i].ToString().Trim() == "DistributorErpId")
+                {
+                    indexer.DistributorErpId = i + 1;
+                }
                 /* if(((object[,])file.Value)[0, i].ToString().Trim() =="NSMEmailId")
                  {
                      indexer.NSMEmailId = i+1;
@@ -153,8 +173,12 @@ namespace ConsoleApplication1
                  }*/
             }
             //Relationship Check
-            checks.One2ManyValidationCheck(sheet, indexer.NSM, indexer.NSMZone);
-            checks.One2ManyValidationCheck(sheet, indexer.NSM, indexer.ZSM);
+            checks.One2ManyValidationCheck(sheet, indexer.NSM, indexer.NSMZone,"NSM","NSMZone");
+          /*  checks.One2ManyValidationCheck(sheet, indexer.NSM, indexer.ZSM);
+            checks.One2ManyValidationCheck(sheet, indexer.BeatState, indexer.FinalBeatName);
+            checks.One2ManyValidationCheck(sheet, indexer.BeatZone, indexer.FinalBeatName);
+            checks.One2ManyValidationCheck(sheet, indexer.FinalBeatName, indexer.DistributorName);
+            checks.One2OneValidationCheck(sheet, indexer.DistributorName, indexer.DistributorErpId);
             //Nsm to Nsm EmailID
             /*  checks.One2ManyValidationCheck(sheet, indexer.NSM, indexer.NSMEmailId);
               //Nsm to Secondary EmailID

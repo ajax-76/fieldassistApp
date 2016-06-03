@@ -1,14 +1,110 @@
-﻿
-@{
-    ViewBag.Title = "Upload";
-}
+﻿@model AllErrors
 
-<h2>Upload</h2>
-@using (Html.BeginForm("Upload", "Upload", FormMethod.Post
-                                    , new { enctype = "multipart/form-data" }))
+@if (Model == null)
 {
-    <input type="file" name="file" />
+    <h1 style="text-align:center;"><span class="label label-default">Upload For Passive Checks</span></h1>
     <br />
-    <input type="submit" value="upload"/>
-}
+    using (Html.BeginForm("Upload", "Upload", FormMethod.Post
+                                            , new { enctype = "multipart/form-data" }))
+    {
+        <input type="file" name="file" />
+        <br />
+        <input class="btn-success" type="submit" value="upload" />
 
+    }
+}
+<br />
+
+@if (Model != null)
+
+{
+    <h1 style="text-align:center;"><span class="label label-info">All Errors and Warnings List</span></h1>
+    <br />
+    if (Model.Warning.Count != 0)
+    {
+        <h2 style="text-align:center";><span class="label label-warning">Warnings</span></h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><span class="label label-warning">Warnings</span></th> 
+                    <th><span class="label label-warning"> Field</span></th>                   
+                    <th><span class="label label-warning">Row</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Warning)
+                {
+                   <tr>
+                       <td>@Html.DisplayFor(modelItem => item.Comments)</td>
+                       <td>@Html.DisplayFor(modelItem=>item.Field)</td>                       
+                       <td>@Html.DisplayFor(modelItem => item.Row)</td>
+                   </tr>
+                }
+            </tbody>           
+        </table>
+        <p><span class="label label-success">Do you Wish To continue</span></p>
+         <button class="alert-warning" id="hide">No</button>
+    }
+        
+       <button class="alert-danger" id="showError">show Error</button>
+        <div id="error">
+            <h3 style="text-align:center";><span class="label label-danger">Errors</span></h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><span class="label label-danger">Mapping Error Type</span></th>
+                        <th><span class="label label-danger">Field1</span></th>
+                        <th><span class="label label-danger">Field2</span></th>
+                        <th><span class="label label-danger">HierarchyBreak</span></th>
+                        <th><span class="label label-danger">IncorrectHeaders</span></th>
+                        <th><span class="label label-danger">EmptyFinalBeatName</span></th>
+                        <th><span class="label label-danger">EmptyESM</span></th>
+                        <th><span class="label label-danger">PhoneNumberCheck</span></th>
+                        <th><span class="label label-danger">Row</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Error)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modeItem => item.MappingErrorType)</td>
+                            <td>@Html.DisplayFor(modeItem => item.Field_1)</td>
+                            <td>@Html.DisplayFor(modeItem => item.Field_2)</td>
+                            <td>@Html.DisplayFor(modeItem => item.HierarchyBeak)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IncorrectHeaders)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EmptyFinalBeatName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EmptyESM)</td>
+                            <td>@Html.DisplayFor(modeItem=>item.PhoneError)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Row)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    
+}
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script>
+
+    $('#error').hide();
+        $('#show').click(function () {
+            $('#error').show();
+            $('#show').hide();
+            $('#hide').hide();
+            $('p').hide();
+        });
+        $('#hide').click(function () {
+            $('#error').hide();
+            $('#show').hide();
+            $('#hide').hide();
+            $('p').hide();
+            $('#showError').hide();
+        });
+        $('#showError').click(function () {
+            $('#error').show();
+            $('#show').hide();
+            $('#hide').hide();
+            $('p').hide();
+            $('#showError').hide();
+        });
+</script>

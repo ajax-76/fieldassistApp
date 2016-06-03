@@ -20,6 +20,10 @@ namespace ConsoleApplication1
               fileHeaders.Add("NSMZone");
             fileHeaders.Add("FinalBeatName");
             fileHeaders.Add("ZSM");
+            fileHeaders.Add("BeatState");          //---------------------cell25
+            fileHeaders.Add("BeatZone");           //---------------------cell26
+            fileHeaders.Add("DistributorName");
+            fileHeaders.Add("DistributorErpId");
             //---------------------cell2
             /*   fileHeaders.Add("NSMEmailId");         //---------------------cell3
                fileHeaders.Add("NSMSecondaryEmailId");//---------------------cell4
@@ -64,7 +68,7 @@ namespace ConsoleApplication1
 
 
                 }
-                var difference = headerCheck.Except(fileHeaders);            
+                var difference = fileHeaders.Except(headerCheck);            
                 if (difference.Any())
                 {
                     Console.WriteLine("Set the Headers correctly");
@@ -110,7 +114,10 @@ namespace ConsoleApplication1
         }       
         static void Main(string[] args)
         {
-            DataRead(@"C:\Docs\Visual Studio 2015\Projects\DataUpload\DataUpload\Seed Data\test.xlsx");            
+            string number = "1234567890";
+            int count = number.Length;
+            Console.WriteLine(count);
+            Console.ReadKey();            
         }
     }    
 }
