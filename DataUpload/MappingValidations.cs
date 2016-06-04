@@ -34,6 +34,7 @@ namespace DataUpload
                                     error.Field_1 = flagString;
                                     error.Field_2 = mapString;
                                     error.Row = j;
+                                    error.LinkRow = i;
                                     errorTemp.Add(error);
                                 }
 
@@ -71,6 +72,7 @@ namespace DataUpload
                                 error.Field_1 = flagString;
                                 error.Field_2 = mapString;
                                 error.Row = j;
+                                error.LinkRow = i;
                                 errorTemp.Add(error);
                             }
                         }
@@ -83,6 +85,7 @@ namespace DataUpload
                                 error.Field_1 = flagString;
                                 error.Field_2 = mapString;
                                 error.Row = j;
+                                error.LinkRow = i;
                                 errorTemp.Add(error);
                             }
                         }
@@ -113,6 +116,8 @@ namespace DataUpload
                                     error.Field_1 = flagString;
                                     error.Field_2 = mapString;
                                     error.Row = j;
+                                    error.LinkRow = i;
+                                  
                                     errorTemp.Add(error);
                                 }
                             }
@@ -226,6 +231,7 @@ namespace DataUpload
                         errors.HierarchyBeak = "Error Hierachy is broken";
                         errors.Field_1 = "RSM";
                         errors.Row = i;
+                        errors.LinkRow = i;
                         errorTemp.Add(errors);
                     }
                 }
@@ -243,6 +249,7 @@ namespace DataUpload
                         errors.HierarchyBeak = "Error Hierachy is broken";
                         errors.Field_1 = "ZSM";
                         errors.Row = i;
+                        errors.LinkRow = i;
                         errorTemp.Add(errors);
                     }
                 }
@@ -260,6 +267,7 @@ namespace DataUpload
                         errors.HierarchyBeak = "Error Hierachy is broken";
                         errors.Field_1 = "NSM";
                         errors.Row = i;
+                        errors.LinkRow = i;
                         errorTemp.Add(errors);
                     }
                 }
@@ -285,7 +293,7 @@ namespace DataUpload
                             errors.PhoneError = "Phone Number Should be of 10 Digit";
                             errors.Field_1 = "ESM Contact Number";
                             errors.Row = i;
-                            
+                            errors.LinkRow = i;
                             errorTemp.Add(errors);
                         }
                     }
@@ -296,6 +304,7 @@ namespace DataUpload
                     errors.PhoneError = "Phone Number is incorrect";
                     errors.Field_1 = "ESM Contact Number";
                     errors.Row = phone;
+                    errors.LinkRow = i;
                     errorTemp.Add(errors);
                 }
                 

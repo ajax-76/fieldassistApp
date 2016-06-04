@@ -11,7 +11,7 @@ namespace DataUpload
         public List<ErrorTemplates> Checker(ExcelWorksheet sheet,List<ErrorTemplates>error)
         {
             List<ErrorTemplates> newError = new List<ErrorTemplates>();
-            FileHeaders.FileHeader indexer = new FileHeaders.FileHeader();
+            columnIndex indexer = new columnIndex();
             MappingValidations checks = new MappingValidations();
             var file = sheet.Cells[sheet.Dimension.Start.Row, sheet.Dimension.Start.Column, sheet.Dimension.Start.Row, sheet.Dimension.End.Column];
 
@@ -213,7 +213,7 @@ namespace DataUpload
         public List<WarningTemplates> WarningChecks(ExcelWorksheet sheet, List<WarningTemplates> error)
         {
             List<WarningTemplates> warningError = new List<WarningTemplates>();
-            FileHeaders.FileHeader indexer = new FileHeaders.FileHeader();
+            columnIndex indexer = new columnIndex();
             MappingValidations checks = new MappingValidations();
             var file = sheet.Cells[sheet.Dimension.Start.Row, sheet.Dimension.Start.Column, sheet.Dimension.Start.Row, sheet.Dimension.End.Column];
             for (int i = sheet.Dimension.Start.Column - 1; i <= sheet.Dimension.End.Column - 1; i++)                 //To find Empty cells.(algo will be updated)

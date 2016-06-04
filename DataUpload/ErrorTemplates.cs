@@ -16,5 +16,7 @@ namespace DataUpload
         public string EmptyESM { get; set; }
         public string HierarchyBeak { get; set; }
         public string PhoneError { get; set; }
+        public int LinkRow { get; set; }
+        
     }
 }

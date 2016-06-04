@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace ConsoleApplication1
 {
-    class FileHeaders
-    {
-        class FileHeader
-        {
+   public class FileHeaders
+    {      
 
             public string NSM { get; set; }
             public string NSMZone { get; set; }
@@ -43,6 +43,7 @@ namespace ConsoleApplication1
             public string DistributorErpId { get; set; }
             public string DistributorEmailId { get; set; }
 
-        }
+        
     }
+    
 }
