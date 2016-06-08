@@ -52,57 +52,30 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th><span class="label label-danger">Mapping Error Type</span></th>
+                        <th><span class="label label-danger">Error Type</span></th>
                         <th><span class="label label-danger">Field1</span></th>
                         <th><span class="label label-danger">Field2</span></th>
-                        <th><span class="label label-danger">HierarchyBreak</span></th>
-                        <th><span class="label label-danger">IncorrectHeaders</span></th>
-                        <th><span class="label label-danger">EmptyFinalBeatName</span></th>
-                        <th><span class="label label-danger">EmptyESM</span></th>
-                        <th><span class="label label-danger">PhoneNumberCheck</span></th>
-                        <th><span class="label label-danger">LinkRow</span></th>
-                        <th><span class="label label-danger">Row</span></th>
+                        <th><span class="label label-danger">Error Description</span></th>                                           
+                        <th><span class="label label-danger">CheckRowForField_2</span></th>
 
                     </tr>
                 </thead>
                 <tbody>
-                   @{ int count=0;}
-                    @{string val = "ankit"; }
+                  
                     @foreach (var item in Model.Error)
                     {
-                        if (count == 0)
-                        {
+                       
+                        
                             <tr>
-                                <td>@Html.DisplayFor(modeItem => item.MappingErrorType)</td>
+                                <td>@Html.DisplayFor(modeItem => item.ErrorType)</td>
                                 <td>@Html.DisplayFor(modeItem => item.Field_1)</td>
                                 <td>@Html.DisplayFor(modeItem => item.Field_2)</td>
-                                <td>@Html.DisplayFor(modeItem => item.HierarchyBeak)</td>
-                                <td>@Html.DisplayFor(modelItem => item.IncorrectHeaders)</td>
-                                <td>@Html.DisplayFor(modelItem => item.EmptyFinalBeatName)</td>
-                                <td>@Html.DisplayFor(modelItem => item.EmptyESM)</td>
-                                <td>@Html.DisplayFor(modeItem => item.PhoneError)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LinkRow)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LinkRow)</td>
+                                <td>@Html.DisplayFor(modeItem => item.ErrorComments)</td>                        
+                                <td>@Html.DisplayFor(modelItem => item.Row)</td>
                             </tr>
-                            count = count + 1;
-                        }
-                        if (Html.DisplayFor(modeItem => item.Field_2).ToString() != val)
-                        {
-                            count = 0;
-                        }
-                        <tr>
-                            <td class="alert">@Html.DisplayFor(modeItem => item.MappingErrorType)</td>
-                            <td class="alert-info">@Html.DisplayFor(modeItem => item.Field_1)</td>
-                            <td class="alert-dismissable">@Html.DisplayFor(modeItem => item.Field_2)</td>                         
-                            <td class="alert-success">@Html.DisplayFor(modeItem => item.HierarchyBeak)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IncorrectHeaders)</td>
-                            <td class="danger">@Html.DisplayFor(modelItem => item.EmptyFinalBeatName)</td>
-                            <td class="">@Html.DisplayFor(modelItem => item.EmptyESM)</td>
-                            <td class="alert-success">@Html.DisplayFor(modeItem=>item.PhoneError)</td>
-                            <td class="alert-link">@Html.DisplayFor(modelItem => item.LinkRow)</td>
-                            <td class="alert-warning">@Html.DisplayFor(modelItem => item.Row)</td>
-                        </tr>
-                        val = Html.DisplayFor(modeItem => item.Field_2).ToString();
+                            
+                        
+                        
                        
                     }
                 </tbody>
@@ -113,7 +86,7 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <script>
 
-    $('#error').hide();
+    $('#error').hide('fast');
         $('#show').click(function () {
             $('#error').show();
             $('#show').hide();

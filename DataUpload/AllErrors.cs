@@ -9,5 +9,6 @@ namespace DataUpload
     {
         public List<ErrorTemplates> Error { get;set; }
         public List<WarningTemplates>Warning { get; set; }
+        
     }
 }

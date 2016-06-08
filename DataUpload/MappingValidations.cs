@@ -16,25 +16,59 @@ namespace DataUpload
                 // var flagCell = file.Cells[start_row, start_coloumn];
                 for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
                 {
-                    var flag = file.Cells[i, flag_coloumn].Value;
                     var map = file.Cells[i, map_coloumn].Value;
+                    if (map != null)
+                    {
+                        map = map.ToString().ToLower();
+                    }
+                    else
+                    {
+                        map = "";
+                    }
+                    
+                    var flag = file.Cells[i, flag_coloumn].Value;
+                    if (flag != null)
+                    {
+                        flag = flag.ToString().ToLower();
+                    }
+                    else
+                    {
+                        flag = "";
+                    }
                     //  int count = 0;
                     for (int j = 2; j <= file.Dimension.End.Row; j++)
                     {
                         if (j != i)
                         {
-                            var x = file.Cells[j, map_coloumn].Value;      
-                            if (x == map)
+                            var x = file.Cells[j, map_coloumn].Value;
+                            if(x!=null)
                             {
-                                var y = file.Cells[j, flag_coloumn];
-                                if (y.Value != flag)
+                                x = x.ToString().ToLower();
+                            }
+                            else
+                            {
+                                x = "";
+                            }     
+                            if (x.Equals(map))
+                            {
+                                var y = file.Cells[j, flag_coloumn].Value;
+                                if(y!=null)
+                                {
+                                    y = y.ToString().ToLower();
+                                }
+                                else
+                                {
+                                    y = "";
+                                }
+                                if (!y.Equals(flag))
                                 {
                                     ErrorTemplates error = new ErrorTemplates();
-                                    error.MappingErrorType = "One to Many";
+                                    error.ErrorType = "One to Many Mapping";
                                     error.Field_1 = flagString;
                                     error.Field_2 = mapString;
                                     error.Row = j;
-                                    error.LinkRow = i;
+                                    error.ErrorComments = "More than one "+mapString +" is mapped to "+flagString;
+                                   // error.LinkRow = i;
                                     errorTemp.Add(error);
                                 }
 
@@ -42,7 +76,7 @@ namespace DataUpload
                         }
                     }
                 }
-                return errorTemp;
+                return errorTemp.OrderBy(x=>x.Row).ToList();
 
             }
             catch(Exception ex)
@@ -56,36 +90,80 @@ namespace DataUpload
         {
             for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
             {
-                var flag = file.Cells[i, flag_coloumn].Value;
                 var map = file.Cells[i, map_coloumn].Value;
+                if (map != null)
+                {
+                    map = map.ToString().ToLower();
+                }
+                else
+                {
+                    map = "";
+                }
+                var flag = file.Cells[i, flag_coloumn].Value;
+                if (flag != null)
+                {
+                    flag = flag.ToString().ToLower();
+                }
+                else
+                {
+                    flag = "";
+                }
                 // int count = 0;
                 for (int j = 2; j <= file.Dimension.End.Row; j++)
                 {
                     if (j != i)
                     {
-                        if (file.Cells[j, flag_coloumn].Value == flag)
+                        var x = file.Cells[j, flag_coloumn].Value;
+                        if(x!=null)
                         {
-                            if (file.Cells[j, map_coloumn].Value != map)
+                            x = x.ToString().ToLower();
+                        }
+                        else
+                        {
+                            x = "";
+                        }
+                        if (x.Equals(flag))
+                        {
+                            var y = file.Cells[j, map_coloumn].Value;
+                            if(y!=null)
+                            {
+                                y = y.ToString().ToLower();
+                            }
+                            else
+                            {
+                                y = "";
+                            }
+                            if (!y.Equals(map))
                             {
                                 ErrorTemplates error = new ErrorTemplates();
-                                error.MappingErrorType = "One to One";
+                                error.ErrorType = "One to One Mapping";
                                 error.Field_1 = flagString;
                                 error.Field_2 = mapString;
                                 error.Row = j;
-                                error.LinkRow = i;
+                                error.ErrorComments = "";
+                             //   error.LinkRow = i;
                                 errorTemp.Add(error);
                             }
                         }
                         else
                         {
-                            if(file.Cells[j,flag_coloumn].Value==map)
+                            var z = file.Cells[j, flag_coloumn].Value;
+                            if(z!=null)
+                            {
+                                z = z.ToString().ToLower();
+                            }
+                            else
+                            {
+                                z = "";
+                            }
+                            if (z.Equals(map))
                             {
                                 ErrorTemplates error = new ErrorTemplates();
-                                error.MappingErrorType = "One to One";
+                                error.ErrorType = "One to One";
                                 error.Field_1 = flagString;
                                 error.Field_2 = mapString;
                                 error.Row = j;
-                                error.LinkRow = i;
+                            //    error.LinkRow = i;
                                 errorTemp.Add(error);
                             }
                         }
@@ -93,7 +171,7 @@ namespace DataUpload
                     }
                 }
             }
-            return errorTemp;
+            return errorTemp.OrderBy(x => x.Row).ToList();
         }
        public List<ErrorTemplates>AttributeMapping(ExcelWorksheet file, int flag_coloumn, int map_coloumn, string flagString, string mapString, List<ErrorTemplates> errorTemp)
         {
@@ -102,22 +180,58 @@ namespace DataUpload
                 for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
                 {
                     var map = file.Cells[i, map_coloumn].Value;
+                    if (map != null)
+                    {
+                        map = map.ToString().ToLower();
+                    }
+
+                    else
+                    {
+                        map = "";
+                    }
                     var flag = file.Cells[i, flag_coloumn].Value;
+                    if(flag!=null)
+                    {
+                        flag = flag.ToString().ToLower();
+                    }
+                    else
+                    {
+                        flag = "";
+                    }
                     for (int j = file.Dimension.Start.Row + 1; j <= file.Dimension.End.Row; j++)
                     {
                         if (j != i)
                         {
-                            if (file.Cells[j, flag_coloumn].Value == flag)
+                            var x = file.Cells[j, flag_coloumn].Value;
+                            if(x!=null)
                             {
-                                if (file.Cells[j, map_coloumn].Value != map)
+                                x = x.ToString().ToLower();
+                            }
+                            else
+                            {
+                                x = "";
+                            }
+
+                            if (x.Equals(flag))
+                            {
+                                var y = file.Cells[j, map_coloumn].Value;
+                                if(y!=null)
+                                {
+                                    y = y.ToString().ToLower();
+                                }
+                                else
+                                {
+                                    y = "";
+                                }
+                                if (!y.Equals(map))
                                 {
                                     ErrorTemplates error = new ErrorTemplates();
-                                    error.MappingErrorType = "Attribute Mapping";
+                                    error.ErrorType = "Attribute Mapping";
                                     error.Field_1 = flagString;
                                     error.Field_2 = mapString;
                                     error.Row = j;
-                                    error.LinkRow = i;
-                                  
+                                    error.ErrorComments = "One "+flagString+" contains more than one "+mapString;
+                                   // error.LinkRow = i;                                 
                                     errorTemp.Add(error);
                                 }
                             }
@@ -128,12 +242,43 @@ namespace DataUpload
             catch(Exception ex)
             {
                 var x = ex.Message;
+                var temp = flag_coloumn;
+                var temp1 = map_coloumn;
             }
-            return errorTemp;
+            return errorTemp.OrderBy(x => x.Row).ToList();
         }
-        public List<WarningTemplates> HierarchyWarning(ExcelWorksheet file,int ASM_index,int RSM_index,int ZSM_index,int NSM_index,List<WarningTemplates> errorTemp)
+        public List<WarningTemplates> HierarchyWarning(ExcelWorksheet file,int ESM_index,int ASM_index,int RSM_index,int ZSM_index,int NSM_index,List<WarningTemplates> errorTemp)
         {
-            for(int i=file.Dimension.Start.Row+1;i<=file.Dimension.End.Row;i++)
+            for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
+            {
+                var flag_ESM = file.Cells[i, ESM_index].Value;
+                if (flag_ESM == null)
+                {
+                    var flag_ASM = file.Cells[i, ASM_index].Value;
+                    if (flag_ASM == null)
+                    {
+                        var flag_RSM = file.Cells[i, RSM_index].Value;
+                        if (flag_RSM == null)
+                        {
+                            var flag_ZSM = file.Cells[i, ZSM_index].Value;
+                            if (flag_ZSM == null)
+                            {
+                                var flag_NSM = file.Cells[i, NSM_index].Value;
+                                if (flag_NSM == null)
+                                {
+                                    WarningTemplates warning = new WarningTemplates();
+                                    warning.Comments = "Warning Hierarchy chain is missing";
+                                    warning.Field = "ESM";
+                                    warning.Row = i;
+                                    errorTemp.Add(warning);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            for (int i=file.Dimension.Start.Row+1;i<=file.Dimension.End.Row;i++)
             {
                 var flag_ASM = file.Cells[i, ASM_index].Value;
                 if(flag_ASM==null)
@@ -215,10 +360,28 @@ namespace DataUpload
                 
 
             }
-            return errorTemp;
+            return errorTemp.OrderByDescending(x => x.Row).ToList();
         }
-        public List<ErrorTemplates>HierarchyError(ExcelWorksheet file, int ASM_index, int RSM_index, int ZSM_index, int NSM_index, List<ErrorTemplates> errorTemp)
+        public List<ErrorTemplates>HierarchyError(ExcelWorksheet file,int ESM_index, int ASM_index, int RSM_index, int ZSM_index, int NSM_index, List<ErrorTemplates> errorTemp)
         {
+            for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
+            {
+                var flag_ESM = file.Cells[i, ESM_index].Value;
+                if (flag_ESM == null)
+                {
+                    var flag_ASM = file.Cells[i, RSM_index].Value;
+                    if (flag_ASM != null)
+                    {
+                        ErrorTemplates errors = new ErrorTemplates();
+                        errors.ErrorType = "Error Hierachy is broken";
+                        errors.Field_1 = "ASM";
+                        errors.Row = i;
+                        errors.ErrorComments = "hierarchy is broken for field ASM";
+                        errorTemp.Add(errors);
+                    }
+                }
+
+            }
             for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
             {
                 var flag_ASM = file.Cells[i, ASM_index].Value;
@@ -228,10 +391,10 @@ namespace DataUpload
                     if (flag_RSM != null)
                     {
                         ErrorTemplates errors = new ErrorTemplates();
-                        errors.HierarchyBeak = "Error Hierachy is broken";
+                        errors.ErrorType = "Error Hierachy is broken";
                         errors.Field_1 = "RSM";
                         errors.Row = i;
-                        errors.LinkRow = i;
+                        errors.ErrorComments="hierarchy is broken for field RSM";
                         errorTemp.Add(errors);
                     }
                 }
@@ -246,10 +409,11 @@ namespace DataUpload
                     if (flag_ZSM != null)
                     {
                         ErrorTemplates errors = new ErrorTemplates();
-                        errors.HierarchyBeak = "Error Hierachy is broken";
+                        errors.ErrorType = "Error Hierachy is broken";
                         errors.Field_1 = "ZSM";
                         errors.Row = i;
-                        errors.LinkRow = i;
+                        errors.ErrorComments = "hierarchy is broken for field ZSM";
+                      //  errors.LinkRow = i;
                         errorTemp.Add(errors);
                     }
                 }
@@ -264,16 +428,17 @@ namespace DataUpload
                     if (flag_ASM != null)
                     {
                         ErrorTemplates errors = new ErrorTemplates();
-                        errors.HierarchyBeak = "Error Hierachy is broken";
+                        errors.ErrorType = "Error Hierachy is broken";
                         errors.Field_1 = "NSM";
                         errors.Row = i;
-                        errors.LinkRow = i;
+                        errors.ErrorComments = "hierarchy is broken for field NSM";
+                      //  errors.LinkRow = i;
                         errorTemp.Add(errors);
                     }
                 }
 
             }
-            return errorTemp;
+            return errorTemp.OrderBy(x => x.Row).ToList();
         }
         public List<ErrorTemplates> CheckPhoneDigit(ExcelWorksheet file,int ESM_flag,List<ErrorTemplates>errorTemp)
         {
@@ -290,10 +455,11 @@ namespace DataUpload
                         if(count!=10)
                         {
                             ErrorTemplates errors = new ErrorTemplates();
-                            errors.PhoneError = "Phone Number Should be of 10 Digit";
+                            errors.ErrorType = "Wrong Phone Number ";
                             errors.Field_1 = "ESM Contact Number";
                             errors.Row = i;
-                            errors.LinkRow = i;
+                            errors.ErrorComments = "phone number should of 10 digit";
+                       //     errors.LinkRow = i;
                             errorTemp.Add(errors);
                         }
                     }
@@ -301,16 +467,42 @@ namespace DataUpload
                 catch
                 {
                     ErrorTemplates errors = new ErrorTemplates();
-                    errors.PhoneError = "Phone Number is incorrect";
+                    errors.ErrorType = "Phone Number is incorrect";
                     errors.Field_1 = "ESM Contact Number";
                     errors.Row = phone;
-                    errors.LinkRow = i;
+                    errors.ErrorComments = "phone number should of 10 digit";
+                   // errors.LinkRow = i;
                     errorTemp.Add(errors);
                 }
                 
             }
-            return errorTemp;
+            return errorTemp.OrderBy(x => x.Row).ToList();
 
+        }
+        public List<ErrorTemplates> EmailCheck(ExcelWorksheet file ,int columnIndex,string field,List<ErrorTemplates> errorTemp)
+        {
+            for(int i=file.Dimension.Start.Row+1;i<=file.Dimension.End.Row;i++)
+            {
+                var value = file.Cells[i, columnIndex].Value;
+                string newValue = "";
+                if(value!=null)
+                {
+                    newValue = value.ToString();
+                }
+                
+                RegexUtilities util = new RegexUtilities();
+                if(!util.IsValidEmail(newValue))
+                {
+                    ErrorTemplates error = new ErrorTemplates();
+                    error.ErrorType = "Email Format";
+                    error.ErrorComments = "Email Format is incorrect";
+                    error.Field_1 = field;
+                    error.Row = i;
+                    errorTemp.Add(error);
+                }
+
+            }
+            return errorTemp.OrderBy(x=>x.Row).ToList();
         }
     }
 }

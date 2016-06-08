@@ -147,7 +147,7 @@ namespace DataUpload
                  }
             }
             //hierarchy break
-            newError.AddRange(checks.HierarchyError(sheet, indexer.ASM, indexer.RSM, indexer.ZSM, indexer.NSM, error));
+            newError.AddRange(checks.HierarchyError(sheet, indexer.ESM,indexer.ASM, indexer.RSM, indexer.ZSM, indexer.NSM, error));
             //Phone Digits checking
             newError.AddRange(checks.CheckPhoneDigit(sheet, indexer.ESMContactNumber,error));
             //Relationship Check
@@ -208,6 +208,18 @@ namespace DataUpload
             newError.AddRange(checks.One2ManyValidationCheck(sheet, indexer.FinalBeatName, indexer.DistributorEmailId, "FinalBeatName", "DistributorEmailId", error));
             //DistributorName to DistributorErpId
             newError.AddRange(checks.One2OneValidationCheck(sheet, indexer.DistributorName, indexer.DistributorErpId,"DistributorName","DistributorErpId",error));
+            //Emails Check
+            newError.AddRange(checks.EmailCheck(sheet, indexer.NSMEmailId, "NSMEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.NSMSecondaryEmailId, "NSMSecondaryEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.ZSMEmailId, "ZSMEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.ZSMEmailId, "ZSMSecondaryEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.RSMEmailId, "RSMEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.RSMEmailId, "RSMSecondaryEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.ASMEmailId, "ASMEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.ASMSecondaryEmailId, "ASMSecondaryEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.ESMEmailId, "ESMEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.ESMEmailId, "ESMSecondaryEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.DistributorEmailId, "DistributorEmailId", error));
             return newError;
         }
         public List<WarningTemplates> WarningChecks(ExcelWorksheet sheet, List<WarningTemplates> error)
@@ -246,7 +258,7 @@ namespace DataUpload
                 
             }
 
-            error.AddRange(checks.HierarchyWarning(sheet, indexer.ASM, indexer.RSM, indexer.ZSM, indexer.NSM, error));
+            error.AddRange(checks.HierarchyWarning(sheet,indexer.ESM, indexer.ASM, indexer.RSM, indexer.ZSM, indexer.NSM, error));
             return error;
         }
     }

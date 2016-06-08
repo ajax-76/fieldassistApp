@@ -8,12 +8,13 @@ using System.Web.Mvc;
 using OfficeOpenXml;
 using CsvHelper;
 using CsvHelper.Configuration;
+using System.Text.RegularExpressions;
 
 namespace DataUpload.Controllers
 {
     public class UploadController : Controller
     {
-
+       
         // GET: Upload
         public ActionResult Upload()
         {
@@ -35,7 +36,7 @@ namespace DataUpload.Controllers
 
                     string filename = Path.GetFileName(file.FileName);
 
-                    path = Path.Combine(Server.MapPath("~/Seed Data/"), filename);
+                    path = Server.MapPath("~/Seed Data/"+ filename);
                     file.SaveAs(path);
                     ValidationChecker mapChecker = new ValidationChecker();
                     List<string> fileHeaders = new List<string>();
@@ -91,7 +92,7 @@ namespace DataUpload.Controllers
                           {
                               ErrorTemplates errorTemplates = new ErrorTemplates();
                               AllErrors tempErrors = new AllErrors();
-                              errorTemplates.IncorrectHeaders = "Set the Headers correctly";
+                              errorTemplates.ErrorType = "Set the Headers correctly";
                               errorTemp.Add(errorTemplates);
                               tempErrors.Error = errorTemp;
                               tempErrors.Warning = warningTemp;
@@ -109,8 +110,9 @@ namespace DataUpload.Controllers
                                           var index = ((object[,])fileField.Value)[j, i];
                                           ErrorTemplates errorTemplates = new ErrorTemplates();
                                           AllErrors tempErrors = new AllErrors();
-                                          errorTemplates.EmptyFinalBeatName = "There is an empty field";
+                                          errorTemplates.ErrorType = "Missing BEAT NAME";
                                           errorTemplates.Row = j + 1;
+                                          errorTemplates.ErrorComments = "Check FINAL BEATNAME";
                                           errorTemp.Add(errorTemplates);
                                           tempErrors.Error = errorTemp;
                                           tempErrors.Warning = warningTemp;
@@ -120,32 +122,12 @@ namespace DataUpload.Controllers
                               }
 
                           }
-                          for (int i = sheet.Dimension.Start.Column - 1; i <= sheet.Dimension.End.Column - 1; i++) //To find Empty cells.(algo will be updated)
-                          {
-                              if (((object[,])fileField.Value)[0, i].ToString().Replace(" ", "") == "ESM")
-                              {
-                                  for (int j = sheet.Dimension.Start.Row - 1; j <= sheet.Dimension.End.Row - 1; j++)
-                                  {
-                                      if (((object[,])fileField.Value)[j, i] == null)
-                                      {
-                                          var index = ((object[,])fileField.Value)[j, i];
-                                          ErrorTemplates errorTemplates = new ErrorTemplates();
-                                          AllErrors tempErrors = new AllErrors();
-                                          errorTemplates.EmptyESM = "There is an empty field";
-                                          errorTemp.Add(errorTemplates);
-                                          tempErrors.Error = errorTemp;
-                                          tempErrors.Warning = warningTemp;
-                                          return View(tempErrors);
-                                      }
-                                  }
-                              }
-
-                          }
+                          
                           warningTemp = mapChecker.WarningChecks(sheet, warningTemp);//Warnings
                           errorTemp = mapChecker.Checker(sheet,errorTemp);//Mapping checking
                           if(errorTemp!=null)
                           {
-                              allErrors.Error = errorTemp.GroupBy(a => new { a.Row, a.Field_1, a.Field_2,a.EmptyESM,a.EmptyFinalBeatName,a.HierarchyBeak,a.IncorrectHeaders,a.MappingErrorType,a.PhoneError,a.LinkRow }, (key, g) => g.FirstOrDefault()).ToList();
+                              allErrors.Error = errorTemp.GroupBy(a => new { a.Row, a.Field_1, a.Field_2,a.ErrorType,a.ErrorComments}, (key, g) => g.FirstOrDefault()).ToList();
                               allErrors.Warning = warningTemp.OrderBy(x=>x.Row).GroupBy(a=>new { a.Row,a.Field,a.Comments},(key,g)=>g.FirstOrDefault()).ToList();
                               return View(allErrors);
                           }
@@ -517,8 +499,7 @@ namespace DataUpload.Controllers
                         }
 
                         //write csv
-
-                        
+                                                
 
                         MemoryStream memory = new MemoryStream();
                         StreamWriter streamwiter = new StreamWriter(memory);
@@ -565,9 +546,9 @@ namespace DataUpload.Controllers
                         streamwiter.Flush();
                         return File(memory.ToArray(), "text/csv", "data.csv");                                        
                     }
-                    catch (Exception ex)
+                    catch 
                     {
-                        string err = ex.Message;
+                        
                         View("Error");
                     }
                 }
