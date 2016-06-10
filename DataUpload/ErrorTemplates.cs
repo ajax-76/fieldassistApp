@@ -12,6 +12,7 @@ namespace DataUpload
         public string Field_2 { get; set; }
         public int Row { get; set; }
         public string ErrorComments { get; set; }
-        
+        public List<string> IncorrectHeaderList { get; set; }
+
     }
 }

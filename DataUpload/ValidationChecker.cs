@@ -17,131 +17,131 @@ namespace DataUpload
 
             for (int i = sheet.Dimension.Start.Column - 1; i <= sheet.Dimension.End.Column - 1; i++)                 //To find Empty cells.(algo will be updated)
             {
-                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "NSM")
+                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == ("NSM").ToLower())
                 {
                     indexer.NSM = i + 1;
                 }
-                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "NSMZone")
+                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == ("NSMZone").ToLower())
                 {
                     indexer.NSMZone = i + 1;
                 }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "NSMEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == ("NSMEmailId").ToLower())
                  {
                      indexer.NSMEmailId = i+1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "NSMSecondaryEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == ("NSMSecondaryEmailId").ToLower())
                  {
                      indexer.NSMSecondaryEmailId = i+1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ZSM")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == ("ZSM").ToLower())
                  {
                      indexer.ZSM = i+1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ZSMZone")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == ("ZSMZone").ToLower())
                  {
                      indexer.ZSMZone = i+1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ZSMEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == ("ZSMEmailId").ToLower())
                  {
                      indexer.ZSMEmailId = i+1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ZSMSecondaryEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == ("ZSMSecondaryEmailId").ToLower())
                  {
                      indexer.ZSMSecondaryEmailId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "RSM")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == ("RSM").ToLower())
                  {
                      indexer.RSM = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "RSMZone")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "RSMZone".ToLower())
                  {
                      indexer.RSMZone = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "RSMEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "RSMEmailId".ToLower())
                  {
                      indexer.RSMEmailId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "RSMSecondaryEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "RSMSecondaryEmailId".ToLower())
                  {
                      indexer.RSMSecondaryEmailId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ASM")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ASM".ToLower())
                  {
                      indexer.ASM = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ASMZone")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ASMZone".ToLower())
                  {
                      indexer.ASMZone = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ASMEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ASMEmailId".ToLower())
                  {
                      indexer.ASMEmailId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ASMSecondaryEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ASMSecondaryEmailId".ToLower())
                  {
                      indexer.ASMSecondaryEmailId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ESM")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ESM".ToLower())
                  {
                      indexer.ESM = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ESMZone")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ESMZone".ToLower())
                  {
                      indexer.ESMZone = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ESMEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ESMEmailId".ToLower())
                  {
                      indexer.ESMEmailId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ESMSecondaryEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ESMSecondaryEmailId".ToLower())
                  {
                      indexer.ESMSecondaryEmailId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ESMContactNumber")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ESMContactNumber".ToLower())
                  {
                      indexer.ESMContactNumber = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ESMHQ")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ESMHQ".ToLower())
                  {
                      indexer.ESMHQ = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ESMErpId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ESMErpId".ToLower())
                  {
                      indexer.ESMErpId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "FinalBeatName")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "FinalBeatName".ToLower())
                  {
                      indexer.FinalBeatName = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "BeatErpId")
+                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "BeatErpId".ToLower())
                  {
                      indexer.BeatErpId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "BeatDistrict")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "BeatDistrict".ToLower())
                  {
                      indexer.BeatDistrict = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "BeatState")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "BeatState".ToLower())
                  {
                      indexer.BeatZone = i + 1;
                  }
-                 if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "BeatZone")
+                 if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "BeatZone".ToLower())
                  {
                      indexer.BeatState = i + 1;
                  }
-                 if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "DistributorName")
+                 if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "DistributorName".ToLower())
                  {
                      indexer.DistributorName = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "DistributorLocation")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "DistributorLocation".ToLower())
                  {
                      indexer.DistributorLocation = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "DistributorErpId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "DistributorErpId".ToLower())
                  {
                      indexer.DistributorErpId = i + 1;
                  }
-                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "DistributorEmailId")
+                 if(((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "DistributorEmailId".ToLower())
                  {
                      indexer.DistributorEmailId = i + 1;
                  }
@@ -153,7 +153,7 @@ namespace DataUpload
             //Relationship Check
             newError.AddRange(checks.AttributeMapping(sheet, indexer.NSM, indexer.NSMZone, "NSM", "NSMZone", error));
             //Nsm to Nsm EmailID
-            newError.AddRange(checks.AttributeMapping(sheet, indexer.NSM, indexer.NSMEmailId, "NSM", "NSMEmailId", error));
+            newError.AddRange(checks.AttributeMapping(sheet, indexer.NSM,indexer.NSMEmailId, "NSM", "NSMEmailId", error));
             //Nsm to Secondary EmailID
             newError.AddRange(checks.AttributeMapping(sheet, indexer.NSM, indexer.NSMSecondaryEmailId, "NSM", "NSMSecondaryEmailId", error));
             //Nsm to Zsm
@@ -218,7 +218,7 @@ namespace DataUpload
             newError.AddRange(checks.EmailCheck(sheet, indexer.ASMEmailId, "ASMEmailId", error));
             newError.AddRange(checks.EmailCheck(sheet, indexer.ASMSecondaryEmailId, "ASMSecondaryEmailId", error));
             newError.AddRange(checks.EmailCheck(sheet, indexer.ESMEmailId, "ESMEmailId", error));
-            newError.AddRange(checks.EmailCheck(sheet, indexer.ESMEmailId, "ESMSecondaryEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.ESMSecondaryEmailId, "ESMSecondaryEmailId", error));
             newError.AddRange(checks.EmailCheck(sheet, indexer.DistributorEmailId, "DistributorEmailId", error));
             return newError;
         }
@@ -230,27 +230,27 @@ namespace DataUpload
             var file = sheet.Cells[sheet.Dimension.Start.Row, sheet.Dimension.Start.Column, sheet.Dimension.Start.Row, sheet.Dimension.End.Column];
             for (int i = sheet.Dimension.Start.Column - 1; i <= sheet.Dimension.End.Column - 1; i++)                 //To find Empty cells.(algo will be updated)
             {
-                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "NSM")
+                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "NSM".ToLower())
                 {
                     indexer.NSM = i + 1;
                 }
                 
-                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ZSM")
+                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ZSM".ToLower())
                 {
                     indexer.ZSM = i + 1;
                 }
                 
-                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "RSM")
+                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "RSM".ToLower())
                 {
                     indexer.RSM = i + 1;
                 }
                 
-                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ASM")
+                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ASM".ToLower())
                 {
                     indexer.ASM = i + 1;
                 }
                 
-                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "") == "ESM")
+                if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ESM".ToLower())
                 {
                     indexer.ESM = i + 1;
                 }

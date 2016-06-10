@@ -110,14 +110,39 @@ namespace ConsoleApplication1
                 Console.WriteLine("Error in file");
                 Console.ReadKey();
             }
+            
 
         }       
         static void Main(string[] args)
         {
-            string number = "1234567890";
-            int count = number.Length;
-            Console.WriteLine(count);
-            Console.ReadKey();            
+            check(1, 2);   
+        }
+        public static void check(int one,int two)
+        {
+            int count = 0;
+            int i = 0;
+            for( i=0;i<=10;i++)
+            {
+                if(i==one)
+                {
+                    count = count + 1;
+                    break;
+                    
+                }
+                if(i==two)
+                {
+                    if(i==two)
+                    {
+                        count = count + 2;
+                        break;
+                    }
+                }
+            }
+            
+            
+                Console.WriteLine("i={0} : count={1}",i,count);
+                Console.ReadKey();
+            
         }
     }    
 }

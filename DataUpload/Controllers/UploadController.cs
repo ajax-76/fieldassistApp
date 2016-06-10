@@ -39,60 +39,44 @@ namespace DataUpload.Controllers
                     path = Server.MapPath("~/Seed Data/"+ filename);
                     file.SaveAs(path);
                     ValidationChecker mapChecker = new ValidationChecker();
-                    List<string> fileHeaders = new List<string>();
-                       fileHeaders.Add("NSM");                //---------------------cell1
-                       fileHeaders.Add("NSMZone");
-                       fileHeaders.Add("NSMEmailId");         //---------------------cell3
-                       fileHeaders.Add("NSMSecondaryEmailId");//---------------------cell4
-                       fileHeaders.Add("ZSM");                //---------------------cell5
-                       fileHeaders.Add("ZSMEmailId");         //---------------------cell6
-                       fileHeaders.Add("ZSMZone");            //---------------------cell7
-                       fileHeaders.Add("ZSMSecondaryEmailId");//---------------------cell8
-                       fileHeaders.Add("RSM");                //---------------------cell9
-                       fileHeaders.Add("RSMEmailId");         //---------------------cell10
-                       fileHeaders.Add("RSMSecondaryEmailId");
-                       fileHeaders.Add("RSMZone");//---------------------cell11
-                       fileHeaders.Add("ASM");                //---------------------cell12
-                       fileHeaders.Add("ASMEmailId");         //---------------------cell13
-                       fileHeaders.Add("ASMZone");            //---------------------cell14
-                       fileHeaders.Add("ASMSecondaryEmailId");//---------------------cell15
-                       fileHeaders.Add("ESM");                //---------------------cell16
-                       fileHeaders.Add("ESMEmailId");         //---------------------cell17
-                       fileHeaders.Add("ESMZone");            //---------------------cell18
-                       fileHeaders.Add("ESMSecondaryEmailId");//---------------------cell19
-                       fileHeaders.Add("ESMContactNumber");   //---------------------cell20
-                       fileHeaders.Add("ESMHQ");
-                       fileHeaders.Add("ESMErpId");//---------------------cell21
-                       fileHeaders.Add("FinalBeatName");      //---------------------cell22
-                       fileHeaders.Add("BeatErpId");          //---------------------cell23
-                       fileHeaders.Add("BeatDistrict");       //---------------------cell24
-                       fileHeaders.Add("BeatState");          //---------------------cell25
-                       fileHeaders.Add("BeatZone");           //---------------------cell26
-                       fileHeaders.Add("DistributorName");    //---------------------cell27
-                       fileHeaders.Add("DistributorLocation");//---------------------cell28
-                       fileHeaders.Add("DistributorErpId");   //---------------------cell29
-                       fileHeaders.Add("DistributorEmailId"); //---------------------cell20*/
+                    List<string> fileHeaders = new List<string>();                       
+                       fileHeaders.Add("FinalBeatName".ToLower());      //---------------------cell22
+                       fileHeaders.Add("BeatErpId".ToLower());          //---------------------cell23
+                       fileHeaders.Add("BeatDistrict".ToLower());       //---------------------cell24
+                       fileHeaders.Add("BeatState".ToLower());          //---------------------cell25
+                       fileHeaders.Add("BeatZone".ToLower());           //---------------------cell26
+                       fileHeaders.Add("DistributorName".ToLower());    //---------------------cell27
+                       fileHeaders.Add("DistributorLocation".ToLower());//---------------------cell28
+                       fileHeaders.Add("DistributorErpId".ToLower());   //---------------------cell29
+                       fileHeaders.Add("DistributorEmailId".ToLower()); //---------------------cell20*/
                     try
                     {
                         var xfile = new FileInfo(path);
                         ExcelPackage package = new ExcelPackage(xfile);
                         ExcelWorksheet sheet = package.Workbook.Worksheets[1];
+                      
                         var header = sheet.Cells[1, 1, 1, sheet.Dimension.End.Column];
                         var fileField = sheet.Cells[sheet.Dimension.Start.Row, sheet.Dimension.Start.Column, sheet.Dimension.End.Row, sheet.Dimension.End.Column];
                           List<string> headerCheck = new List<string>();
                           for (int i = 0; i < sheet.Dimension.End.Column; i++)
                           {
-
-                              headerCheck.Add(((object[,])fileField.Value)[0, i].ToString().Replace(" ",""));
-
+                            if (((object[,])fileField.Value)[0, i] != null)
+                            {
+                                headerCheck.Add(((object[,])fileField.Value)[0, i].ToString().Replace(" ", "").ToLower());
+                            }
 
                           }
+                       
                           var difference = fileHeaders.Except(headerCheck);
                           if (difference.Any())
                           {
+                            
                               ErrorTemplates errorTemplates = new ErrorTemplates();
                               AllErrors tempErrors = new AllErrors();
-                              errorTemplates.ErrorType = "Set the Headers correctly";
+                              errorTemplates.ErrorType = "Set the Headers correctly ";
+                              errorTemplates.ErrorComments = "Something is Wrong These Following headers Either they are Missing or not correctly spelled";
+                              errorTemplates.IncorrectHeaderList=difference.ToList();
+                              tempErrors.ShowHeader=errorTemplates;
                               errorTemp.Add(errorTemplates);
                               tempErrors.Error = errorTemp;
                               tempErrors.Warning = warningTemp;
@@ -101,7 +85,7 @@ namespace DataUpload.Controllers
 
                           for (int i = sheet.Dimension.Start.Column - 1; i <= sheet.Dimension.End.Column - 1; i++) //To find Empty cells.(algo will be updated)
                           {
-                              if (((object[,])fileField.Value)[0, i].ToString().Replace(" ","") == "FinalBeatName")
+                              if (((object[,])fileField.Value)[0, i].ToString().Replace(" ","").ToLower() == "FinalBeatName".ToLower())
                               {
                                   for (int j = sheet.Dimension.Start.Row - 1; j <= sheet.Dimension.End.Row - 1; j++)
                                   {
@@ -114,6 +98,7 @@ namespace DataUpload.Controllers
                                           errorTemplates.Row = j + 1;
                                           errorTemplates.ErrorComments = "Check FINAL BEATNAME";
                                           errorTemp.Add(errorTemplates);
+                                          tempErrors.ShowHeader = null;
                                           tempErrors.Error = errorTemp;
                                           tempErrors.Warning = warningTemp;
                                           return View(tempErrors);
@@ -125,11 +110,13 @@ namespace DataUpload.Controllers
                           
                           warningTemp = mapChecker.WarningChecks(sheet, warningTemp);//Warnings
                           errorTemp = mapChecker.Checker(sheet,errorTemp);//Mapping checking
+
                           if(errorTemp!=null)
                           {
-                              allErrors.Error = errorTemp.GroupBy(a => new { a.Row, a.Field_1, a.Field_2,a.ErrorType,a.ErrorComments}, (key, g) => g.FirstOrDefault()).ToList();
+                              allErrors.Error = errorTemp.GroupBy(a => new { a.Row, a.Field_1, a.Field_2,a.ErrorType,a.ErrorComments,a.IncorrectHeaderList}, (key, g) => g.FirstOrDefault()).ToList();
                               allErrors.Warning = warningTemp.OrderBy(x=>x.Row).GroupBy(a=>new { a.Row,a.Field,a.Comments},(key,g)=>g.FirstOrDefault()).ToList();
-                              return View(allErrors);
+                            allErrors.ShowHeader = null;
+                             return View(allErrors);
                           }
 
                         //Excel to object  
@@ -141,7 +128,7 @@ namespace DataUpload.Controllers
                             FileHeaders records = new FileHeaders();
                             for (int j=sheet.Dimension.Start.Column-1;j<sheet.Dimension.End.Column;j++)
                             {
-                                if(((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "NSM")
+                                if(((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "NSM".ToLower())
                                 {
                                     if(((object[,])fileField.Value)[i, j]!=null)
                                     {
@@ -153,7 +140,7 @@ namespace DataUpload.Controllers
                                     }
                                     
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "NSMZone")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "NSMZone".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -164,7 +151,7 @@ namespace DataUpload.Controllers
                                         records.NSMZone = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "NSMEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "NSMEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -175,7 +162,7 @@ namespace DataUpload.Controllers
                                         records.NSMEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "NSMSecondaryEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "NSMSecondaryEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -186,7 +173,7 @@ namespace DataUpload.Controllers
                                         records.NSMSecondaryEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ZSM")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ZSM".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -197,7 +184,7 @@ namespace DataUpload.Controllers
                                         records.ZSM = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ZSMZone")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ZSMZone".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -208,7 +195,7 @@ namespace DataUpload.Controllers
                                         records.ZSMZone = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ZSMEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ZSMEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -219,7 +206,7 @@ namespace DataUpload.Controllers
                                         records.ZSMEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ZSMSecondaryEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ZSMSecondaryEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -230,7 +217,7 @@ namespace DataUpload.Controllers
                                         records.ZSMSecondaryEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "RSM")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "RSM".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -241,7 +228,7 @@ namespace DataUpload.Controllers
                                         records.RSM = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "RSMZone")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "RSMZone".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -252,7 +239,7 @@ namespace DataUpload.Controllers
                                         records.RSMZone = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "RSMEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "RSMEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -263,7 +250,7 @@ namespace DataUpload.Controllers
                                         records.RSMEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "RSMSecondaryEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "RSMSecondaryEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -274,7 +261,7 @@ namespace DataUpload.Controllers
                                         records.RSMSecondaryEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ASM")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ASM".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -285,7 +272,7 @@ namespace DataUpload.Controllers
                                         records.ASM = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ASMZone")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ASMZone".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -296,7 +283,7 @@ namespace DataUpload.Controllers
                                         records.ASMZone = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ASMEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ASMEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -307,7 +294,7 @@ namespace DataUpload.Controllers
                                         records.ASMEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ASMSecondaryEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ASMSecondaryEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -318,7 +305,7 @@ namespace DataUpload.Controllers
                                         records.ASMSecondaryEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ESM")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESM".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -329,7 +316,7 @@ namespace DataUpload.Controllers
                                         records.ESM = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ESMEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -340,7 +327,7 @@ namespace DataUpload.Controllers
                                         records.ESMEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ESMSecondaryEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMSecondaryEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -351,7 +338,7 @@ namespace DataUpload.Controllers
                                         records.ESMSecondaryEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ESMZone")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMZone".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -362,7 +349,7 @@ namespace DataUpload.Controllers
                                         records.ESMZone = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ESMContactNumber")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMContactNumber".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -373,7 +360,7 @@ namespace DataUpload.Controllers
                                         records.ESMContactNumber = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ESMHQ")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMHQ".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -384,7 +371,7 @@ namespace DataUpload.Controllers
                                         records.ESMHQ = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "ESMErpId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMErpId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -395,7 +382,7 @@ namespace DataUpload.Controllers
                                         records.ESMErpId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "FinalBeatName")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "FinalBeatName".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -406,7 +393,7 @@ namespace DataUpload.Controllers
                                         records.FinalBeatName = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "BeatState")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "BeatState".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -417,7 +404,7 @@ namespace DataUpload.Controllers
                                         records.BeatState = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "BeatDistrict")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "BeatDistrict".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -428,7 +415,7 @@ namespace DataUpload.Controllers
                                         records.BeatDistrict = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "BeatZone")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "BeatZone".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -439,7 +426,7 @@ namespace DataUpload.Controllers
                                         records.BeatZone = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "BeatErpId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "BeatErpId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -450,7 +437,7 @@ namespace DataUpload.Controllers
                                         records.BeatErpId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "DistributorName")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "DistributorName".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -461,7 +448,7 @@ namespace DataUpload.Controllers
                                         records.DistributorName = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "DistributorLocation")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "DistributorLocation".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -472,7 +459,7 @@ namespace DataUpload.Controllers
                                         records.DistributorLocation = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "DistributorEmailId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "DistributorEmailId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -483,7 +470,7 @@ namespace DataUpload.Controllers
                                         records.DistributorEmailId = "";
                                     }
                                 }
-                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "") == "DistributorErpId")
+                                if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "DistributorErpId".ToLower())
                                 {
                                     if (((object[,])fileField.Value)[i, j] != null)
                                     {
@@ -546,16 +533,17 @@ namespace DataUpload.Controllers
                         streamwiter.Flush();
                         return File(memory.ToArray(), "text/csv", "data.csv");                                        
                     }
-                    catch 
+                    catch(Exception ex) 
                     {
-                        
-                        View("Error");
+                        var error = ex;
+                       return  View("Error");
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                View("Error");
+                var error = ex;
+               return View("Error");
             }
 
 

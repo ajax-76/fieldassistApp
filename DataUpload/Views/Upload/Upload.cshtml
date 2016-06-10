@@ -9,6 +9,8 @@
     {
         <input type="file" name="file" />
         <br />
+         <p><span class="label label-warning"> Upload File in xlsx Format </span> </p>
+        <br />
         <input class="btn-success" type="submit" value="upload" />
 
     }
@@ -20,6 +22,7 @@
 {
     <h1 style="text-align:center;"><span class="label label-info">All Errors and Warnings List</span></h1>
     <br />
+    
     if (Model.Warning.Count != 0)
     {
         <h2 style="text-align:center";><span class="label label-warning">Warnings</span></h2>
@@ -45,7 +48,7 @@
         <p><span class="label label-success">Do you Wish To continue</span></p>
          <button class="alert-warning" id="hide">No</button>
     }
-        
+
        <button class="alert-danger" id="showError">show Error</button>
         <div id="error">
             <h3 style="text-align:center";><span class="label label-danger">Errors</span></h3>
@@ -55,9 +58,13 @@
                         <th><span class="label label-danger">Error Type</span></th>
                         <th><span class="label label-danger">Field1</span></th>
                         <th><span class="label label-danger">Field2</span></th>
-                        <th><span class="label label-danger">Error Description</span></th>                                           
+                        <th><span class="label label-danger">Error Description</span></th>  
+                        @if (Model.ShowHeader != null)
+                        {
+                            <th><span class="label label-danger">IncorrectHeaderList</span></th>
+                        }                                         
                         <th><span class="label label-danger">CheckRowForField_2</span></th>
-
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -70,8 +77,22 @@
                                 <td>@Html.DisplayFor(modeItem => item.ErrorType)</td>
                                 <td>@Html.DisplayFor(modeItem => item.Field_1)</td>
                                 <td>@Html.DisplayFor(modeItem => item.Field_2)</td>
-                                <td>@Html.DisplayFor(modeItem => item.ErrorComments)</td>                        
+                                <td>@Html.DisplayFor(modeItem => item.ErrorComments)</td>   
+                                @if (Model.ShowHeader != null)
+                                {
+                                    <td>
+                                        <table class="table">
+
+                                            @foreach (var key in Model.ShowHeader.IncorrectHeaderList)
+                                            {
+                                                <tr><td>@key</td></tr>
+                                            }
+
+                                        </table>
+                                    </td>
+                                }                     
                                 <td>@Html.DisplayFor(modelItem => item.Row)</td>
+                                
                             </tr>
                             
                         
