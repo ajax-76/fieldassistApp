@@ -577,10 +577,21 @@ namespace DataUpload
                         {
                             string number = file.Cells[i, ESM_flag].Value.ToString().Trim();
                             int count = number.Length;
-                            if (count != 10)
+                            if (number.Any(x=>char.IsLetter(x)))
                             {
                                 ErrorTemplates errors = new ErrorTemplates();
-                                errors.ErrorType = "Wrong Phone Number ";
+                                errors.ErrorType = "Phone Number is incorrect";
+                                errors.Field_1 = "ESM Contact Number";
+                                errors.Row = phone;
+                                errors.ErrorComments = "phone number should only contain Numeric values";
+                                // errors.LinkRow = i;
+                                errorTemp.Add(errors);
+                            }
+                            
+                            else if (count != 10)
+                            {
+                                ErrorTemplates errors = new ErrorTemplates();
+                                errors.ErrorType = "Phone Number is incorrect ";
                                 errors.Field_1 = "ESM Contact Number";
                                 errors.Row = i;
                                 errors.ErrorComments = "phone number should of 10 digit";

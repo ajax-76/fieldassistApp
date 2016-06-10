@@ -212,9 +212,9 @@ namespace DataUpload
             newError.AddRange(checks.EmailCheck(sheet, indexer.NSMEmailId, "NSMEmailId", error));
             newError.AddRange(checks.EmailCheck(sheet, indexer.NSMSecondaryEmailId, "NSMSecondaryEmailId", error));
             newError.AddRange(checks.EmailCheck(sheet, indexer.ZSMEmailId, "ZSMEmailId", error));
-            newError.AddRange(checks.EmailCheck(sheet, indexer.ZSMEmailId, "ZSMSecondaryEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.ZSMSecondaryEmailId, "ZSMSecondaryEmailId", error));
             newError.AddRange(checks.EmailCheck(sheet, indexer.RSMEmailId, "RSMEmailId", error));
-            newError.AddRange(checks.EmailCheck(sheet, indexer.RSMEmailId, "RSMSecondaryEmailId", error));
+            newError.AddRange(checks.EmailCheck(sheet, indexer.ZSMSecondaryEmailId, "RSMSecondaryEmailId", error));
             newError.AddRange(checks.EmailCheck(sheet, indexer.ASMEmailId, "ASMEmailId", error));
             newError.AddRange(checks.EmailCheck(sheet, indexer.ASMSecondaryEmailId, "ASMSecondaryEmailId", error));
             newError.AddRange(checks.EmailCheck(sheet, indexer.ESMEmailId, "ESMEmailId", error));

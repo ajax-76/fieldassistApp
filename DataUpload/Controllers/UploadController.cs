@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using System.Web;                                                                                   
+using System.Web.Mvc;                                                                                   
 using OfficeOpenXml;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -39,22 +39,27 @@ namespace DataUpload.Controllers
                     path = Server.MapPath("~/Seed Data/"+ filename);
                     file.SaveAs(path);
                     ValidationChecker mapChecker = new ValidationChecker();
-                    List<string> fileHeaders = new List<string>();                       
-                       fileHeaders.Add("FinalBeatName".ToLower());      //---------------------cell22
-                       fileHeaders.Add("BeatErpId".ToLower());          //---------------------cell23
-                       fileHeaders.Add("BeatDistrict".ToLower());       //---------------------cell24
-                       fileHeaders.Add("BeatState".ToLower());          //---------------------cell25
-                       fileHeaders.Add("BeatZone".ToLower());           //---------------------cell26
-                       fileHeaders.Add("DistributorName".ToLower());    //---------------------cell27
-                       fileHeaders.Add("DistributorLocation".ToLower());//---------------------cell28
-                       fileHeaders.Add("DistributorErpId".ToLower());   //---------------------cell29
-                       fileHeaders.Add("DistributorEmailId".ToLower()); //---------------------cell20*/
+                    List<string> fileHeaders = new List<string>();
+                    fileHeaders.Add("NSM".ToLower());
+                    fileHeaders.Add("ZSM".ToLower());
+                    fileHeaders.Add("RSM".ToLower());
+                    fileHeaders.Add("ASM".ToLower());
+                    fileHeaders.Add("ESM".ToLower());                      
+                    fileHeaders.Add("FinalBeatName".ToLower());      //---------------------cell22
+                    fileHeaders.Add("BeatErpId".ToLower());          //---------------------cell23
+                    fileHeaders.Add("BeatDistrict".ToLower());       //---------------------cell24
+                    fileHeaders.Add("BeatState".ToLower());          //---------------------cell25
+                    fileHeaders.Add("BeatZone".ToLower());           //---------------------cell26
+                    fileHeaders.Add("DistributorName".ToLower());    //---------------------cell27
+                    fileHeaders.Add("DistributorLocation".ToLower());//---------------------cell28
+                    fileHeaders.Add("DistributorErpId".ToLower());   //---------------------cell29
+                    fileHeaders.Add("DistributorEmailId".ToLower()); //---------------------cell20*/
                     try
                     {
                         var xfile = new FileInfo(path);
                         ExcelPackage package = new ExcelPackage(xfile);
                         ExcelWorksheet sheet = package.Workbook.Worksheets[1];
-                      
+                        
                         var header = sheet.Cells[1, 1, 1, sheet.Dimension.End.Column];
                         var fileField = sheet.Cells[sheet.Dimension.Start.Row, sheet.Dimension.Start.Column, sheet.Dimension.End.Row, sheet.Dimension.End.Column];
                           List<string> headerCheck = new List<string>();
