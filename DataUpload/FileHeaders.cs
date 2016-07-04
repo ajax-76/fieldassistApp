@@ -8,7 +8,7 @@ using CsvHelper.Configuration;
 
 namespace DataUpload
 {
-    public class FileHeaders
+    public class FileHeadersBeatHierarchy
     {
        
 
@@ -44,10 +44,11 @@ namespace DataUpload
             public string DistributorLocation { get; set; }
             public string DistributorErpId { get; set; }
             public string DistributorEmailId { get; set; }
+            public int Row { get; set; }
 
         
     }
-    public sealed class MyClass : CsvClassMap<FileHeaders>
+    public sealed class MyClass : CsvClassMap<FileHeadersBeatHierarchy>
     {
         public MyClass()
         {

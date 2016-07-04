@@ -5,10 +5,10 @@
     <br />
     <br />
     <div class="input" style="color:red;">
-        <h1 style="text-align:center;"><span class="label label-default">Upload For Passive Checks (Beat and Hierarchy)</span></h1>
+        <h1 style="text-align:center;"><span class="label label-default">Upload For Passive Checks (Product Addition)</span></h1>
         <br />
-        @using (Html.BeginForm("Upload", "Upload", FormMethod.Post
-                                                                            , new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("ProductAddition", "Upload", FormMethod.Post
+                                                            , new { enctype = "multipart/form-data" }))
         {
             <input type="file" name="file" />
             <br />
@@ -55,7 +55,7 @@
         <p><span class="label label-success">Do you Wish To continue</span></p>
         <button class="alert-warning" id="hide">No</button>
     }
-
+    
 
     <button class="alert-danger" id="showError">show Error</button>
     <div id="error">

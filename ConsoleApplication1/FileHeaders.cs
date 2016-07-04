@@ -37,11 +37,13 @@ namespace ConsoleApplication1
             public string ESMErpId { get; set; }
             public string BeatErpId { get; set; }
             public string BeatDistrict { get; set; }
-            public string BeatStateZone { get; set; }
+            public string BeatState { get; set; }
+            public string BeatZone { get; set; }
             public string DistributorName { get; set; }
             public string DistributorLocation { get; set; }
             public string DistributorErpId { get; set; }
             public string DistributorEmailId { get; set; }
+            public int Row { get; set; }
 
         
     }

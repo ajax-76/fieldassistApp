@@ -10,5 +10,6 @@ namespace DataUpload
         public string Comments { get; set; }
         public string Field { get; set; }
         public int Row { get; set; }
+        public List<string> headers { get; set; }
     }
 }

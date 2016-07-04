@@ -5,9 +5,9 @@ using System.Web;
 
 namespace DataUpload
 {
-    public class EmptyESM
+    public class Mapping
     {
-        public string ErrorType { get; set; }
+        public string c1 { get; set; }
         public int row { get; set; }
     }
 }

@@ -9,72 +9,74 @@ namespace DataUpload
 {
     public class MappingValidations
     {
-        public List<ErrorTemplates> One2ManyValidationCheck(ExcelWorksheet file, int flag_coloumn, int map_coloumn, string flagString, string mapString,List<ErrorTemplates>errorTemp)
+        public List<ErrorTemplates> One2ManyValidationCheck(List<IGrouping<string,Mapping>> query1, int flag_coloumn, int map_coloumn, string flagString, string mapString)
         {
+            List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
+            int count1 = 0;
+            int count2 = 0;
             try
             {
                 // var flagCell = file.Cells[start_row, start_coloumn];
                 if (flag_coloumn != 0 && map_coloumn != 0)
                 {
-                    for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
+
+                    List<List<Mapping>> mappin = new List<List<Mapping>>();
+                    foreach (var key in query1)
                     {
+                        List<Mapping> tempMap = new List<Mapping>();
+                        foreach (var item in key)
+                        {
+                            Mapping map = new Mapping();
+                            map.c1 = item.c1;
+                            map.row = item.row;
+                            tempMap.Add(map);
+                        }
+                        mappin.Add(tempMap);
+                    }
+                    foreach (var item in mappin)
+                    {
+                        var comparer = item;
+                        var list1 = item.Select(x => x.c1).ToList();
 
-                        var map = file.Cells[i, map_coloumn].Value;
-                        if (map != null)
+                        foreach (var item2 in mappin)
                         {
-                            map = map.ToString().ToLower();
-                        }
-                        else
-                        {
-                            map = "";
-                        }
 
-                        var flag = file.Cells[i, flag_coloumn].Value;
-                        if (flag != null)
-                        {
-                            flag = flag.ToString().ToLower();
-                        }
-                        else
-                        {
-                            flag = "";
-                        }
-                        //  int count = 0;
-                        for (int j = 2; j <= file.Dimension.End.Row; j++)
-                        {
-                            if (j != i)
+                            var list2 = item2.Select(x => x.c1).ToList();
+                            if (item != item2)
                             {
-                                var x = file.Cells[j, map_coloumn].Value;
-                                if (x != null)
+                                var differenceMap = list1.Intersect(list2).ToList();
+                                if (differenceMap.Count() != 0)
                                 {
-                                    x = x.ToString().ToLower();
-                                }
-                                else
-                                {
-                                    x = "";
-                                }
-                                if (x.Equals(map))
-                                {
-                                    var y = file.Cells[j, flag_coloumn].Value;
-                                    if (y != null)
+                                    List<int> q = new List<int>();
+                                    List<int> r = new List<int>();
+                                    foreach (var key in differenceMap)
                                     {
-                                        y = y.ToString().ToLower();
-                                    }
-                                    else
-                                    {
-                                        y = "";
-                                    }
-                                    if (!y.Equals(flag))
-                                    {
-                                        ErrorTemplates error = new ErrorTemplates();
-                                        error.ErrorType = "One to Many Mapping";
-                                        error.Field_1 = flagString;
-                                        error.Field_2 = mapString;
-                                        error.Row = j;
-                                        error.ErrorComments = "More than one " + mapString + " is mapped to " + flagString;
-                                        // error.LinkRow = i;
-                                        errorTemp.Add(error);
+                                        q = item.Where(x => x.c1 == key).Select(x => x.row).ToList();
+                                        r = item2.Where(x => x.c1 == key).Select(x => x.row).ToList();
                                     }
 
+
+                                    foreach (var num in q.Distinct())
+                                    {
+                                        ErrorTemplates temp = new ErrorTemplates();
+                                        temp.ErrorType = "One to Many mapping";
+                                        temp.Field_1 = flagString;
+                                        temp.Field_2 = mapString;
+                                        temp.Row = num;
+                                        errorTemp.Add(temp);
+                                        
+                                    }
+
+                                    foreach (var num in r.Distinct())
+                                    {
+                                        ErrorTemplates temp = new ErrorTemplates();
+                                        temp.ErrorType = "One to Many mapping";
+                                        temp.Field_1 = flagString;
+                                        temp.Field_2 = mapString;
+                                        temp.Row = num;
+                                        errorTemp.Add(temp);
+                                        
+                                    }
                                 }
                             }
                         }
@@ -86,169 +88,137 @@ namespace DataUpload
             catch(Exception ex)
             {
                 var x = ex.Message;
-                
+                var c = count1;
+                var c2 = count2;
             }
             return null;
         }
-        public List<ErrorTemplates>  One2OneValidationCheck(ExcelWorksheet file, int flag_coloumn, int map_coloumn, string flagString, string mapString, List<ErrorTemplates> errorTemp)
+        public List<ErrorTemplates>  One2OneValidationCheck(List<IGrouping<string,Mapping>> query1, int flag_coloumn, int map_coloumn, string flagString, string mapString)
         {
+            List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
             if (flag_coloumn != 0 && map_coloumn != 0)
             {
-                for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
-                {
-                    var map = file.Cells[i, map_coloumn].Value;
-                    if (map != null)
-                    {
-                        map = map.ToString().ToLower();
-                    }
-                    else
-                    {
-                        map = "";
-                    }
-                    var flag = file.Cells[i, flag_coloumn].Value;
-                    if (flag != null)
-                    {
-                        flag = flag.ToString().ToLower();
-                    }
-                    else
-                    {
-                        flag = "";
-                    }
-                    // int count = 0;
-                    for (int j = 2; j <= file.Dimension.End.Row; j++)
-                    {
-                        if (j != i)
-                        {
-                            var x = file.Cells[j, flag_coloumn].Value;
-                            if (x != null)
-                            {
-                                x = x.ToString().ToLower();
-                            }
-                            else
-                            {
-                                x = "";
-                            }
-                            if (x.Equals(flag))
-                            {
-                                var y = file.Cells[j, map_coloumn].Value;
-                                if (y != null)
-                                {
-                                    y = y.ToString().ToLower();
-                                }
-                                else
-                                {
-                                    y = "";
-                                }
-                                if (!y.Equals(map))
-                                {
-                                    ErrorTemplates error = new ErrorTemplates();
-                                    error.ErrorType = "One to One Mapping";
-                                    error.Field_1 = flagString;
-                                    error.Field_2 = mapString;
-                                    error.Row = j;
-                                    error.ErrorComments = "";
-                                    //   error.LinkRow = i;
-                                    errorTemp.Add(error);
-                                }
-                            }
-                            else
-                            {
-                                var z = file.Cells[j, flag_coloumn].Value;
-                                if (z != null)
-                                {
-                                    z = z.ToString().ToLower();
-                                }
-                                else
-                                {
-                                    z = "";
-                                }
-                                if (z.Equals(map))
-                                {
-                                    ErrorTemplates error = new ErrorTemplates();
-                                    error.ErrorType = "One to One";
-                                    error.Field_1 = flagString;
-                                    error.Field_2 = mapString;
-                                    error.Row = j;
-                                    //    error.LinkRow = i;
-                                    errorTemp.Add(error);
-                                }
-                            }
 
+                List<List<Mapping>> mappin = new List<List<Mapping>>();
+                foreach (var key in query1)
+                {
+                    List<Mapping> tempMap = new List<Mapping>();
+                    foreach (var item in key)
+                    {
+                        Mapping map = new Mapping();
+                        map.c1 = item.c1;
+                        map.row = item.row;
+                        tempMap.Add(map);
+                    }
+                    mappin.Add(tempMap);
+                }
+                foreach (var item in mappin)
+                {
+                    var comparer = item;
+                    var list1 = item.Select(x => x.c1).ToList();
+                    var key1 = list1.Distinct().Count();
+                    if(key1!=1)
+                    {
+                        foreach (var num in item)
+                        {
+                            ErrorTemplates temp = new ErrorTemplates();
+                            temp.ErrorType = "One to One mapping";
+                            temp.Field_1 = flagString;
+                            temp.Field_2 = mapString;
+                            temp.Row = num.row;
+                            errorTemp.Add(temp);
+
+                        }
+                    }
+                    foreach (var item2 in mappin)
+                    {
+
+                        var list2 = item2.Select(x => x.c1).ToList();
+                        if (item != item2)
+                        {
+                            var differenceMap = list1.Intersect(list2).ToList();
+                            if (differenceMap.Count() != 0)
+                            {
+                                List<int> q = new List<int>();
+                                List<int> r = new List<int>();
+                                foreach (var key in differenceMap)
+                                {
+                                    q = item.Where(x => x.c1 == key).Select(x => x.row).ToList();
+                                    r = item2.Where(x => x.c1 == key).Select(x => x.row).ToList();
+                                }
+
+
+                                foreach (var num in q.Distinct())
+                                {
+                                    ErrorTemplates temp = new ErrorTemplates();
+                                    temp.ErrorType = "One to One mapping";
+                                    temp.Field_1 = flagString;
+                                    temp.Field_2 = mapString;
+                                    temp.Row = num;
+                                    errorTemp.Add(temp);
+
+                                }
+
+                                foreach (var num in r.Distinct())
+                                {
+                                    ErrorTemplates temp = new ErrorTemplates();
+                                    temp.ErrorType = "One to One mapping";
+                                    temp.Field_1 = flagString;
+                                    temp.Field_2 = mapString;
+                                    temp.Row = num;
+                                    errorTemp.Add(temp);
+
+                                }
+                            }
                         }
                     }
                 }
             }
             return errorTemp.OrderBy(x => x.Row).ToList();
         }
-       public List<ErrorTemplates>AttributeMapping(ExcelWorksheet file, int flag_coloumn, int map_coloumn, string flagString, string mapString, List<ErrorTemplates> errorTemp)
+       public List<ErrorTemplates>AttributeMapping(List<IGrouping<string, Mapping>> query1, int flag_coloumn, int map_coloumn, string flagString, string mapString)
         {
+            List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
             try
             {
+
                 if (flag_coloumn != 0 && map_coloumn != 0)
                 {
-                    for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
+
+                    List<List<Mapping>> mappin = new List<List<Mapping>>();
+                    foreach (var key in query1)
                     {
-                        var map = file.Cells[i, map_coloumn].Value;
-                        if (map != null)
+                        List<Mapping> tempMap = new List<Mapping>();
+                        foreach (var item in key)
                         {
-                            map = map.ToString().ToLower();
+                            Mapping map = new Mapping();
+                            map.c1 = item.c1;
+                            map.row = item.row;
+                            tempMap.Add(map);
                         }
-
-                        else
+                        mappin.Add(tempMap);
+                    }
+                    foreach (var item in mappin)
+                    {
+                        var comparer = item;
+                        var list1 = item.Select(x => x.c1).ToList();
+                        var key1 = list1.Distinct().Count();
+                        if (key1 != 1)
                         {
-                            map = "";
-                        }
-                        var flag = file.Cells[i, flag_coloumn].Value;
-                        if (flag != null)
-                        {
-                            flag = flag.ToString().ToLower();
-                        }
-                        else
-                        {
-                            flag = "";
-                        }
-                        for (int j = file.Dimension.Start.Row + 1; j <= file.Dimension.End.Row; j++)
-                        {
-                            if (j != i)
+                            foreach (var num in item)
                             {
-                                var x = file.Cells[j, flag_coloumn].Value;
-                                if (x != null)
-                                {
-                                    x = x.ToString().ToLower();
-                                }
-                                else
-                                {
-                                    x = "";
-                                }
+                                ErrorTemplates temp = new ErrorTemplates();
+                                temp.ErrorType = "Attribute Mapping";
+                                temp.Field_1 = flagString;
+                                temp.Field_2 = mapString;
+                                temp.Row = num.row;
+                                errorTemp.Add(temp);
 
-                                if (x.Equals(flag))
-                                {
-                                    var y = file.Cells[j, map_coloumn].Value;
-                                    if (y != null)
-                                    {
-                                        y = y.ToString().ToLower();
-                                    }
-                                    else
-                                    {
-                                        y = "";
-                                    }
-                                    if (!y.Equals(map))
-                                    {
-                                        ErrorTemplates error = new ErrorTemplates();
-                                        error.ErrorType = "Attribute Mapping";
-                                        error.Field_1 = flagString;
-                                        error.Field_2 = mapString;
-                                        error.Row = j;
-                                        error.ErrorComments = "One " + flagString + " contains more than one " + mapString;
-                                        // error.LinkRow = i;                                 
-                                        errorTemp.Add(error);
-                                    }
-                                }
                             }
                         }
                     }
                 }
-            }
+                }
             catch(Exception ex)
             {
                 var x = ex.Message;
@@ -257,8 +227,9 @@ namespace DataUpload
             }
             return errorTemp.OrderBy(x => x.Row).ToList();
         }
-        public List<WarningTemplates> HierarchyWarning(ExcelWorksheet file,int ESM_index,int ASM_index,int RSM_index,int ZSM_index,int NSM_index,List<WarningTemplates> errorTemp)
+        public List<WarningTemplates> HierarchyWarning(ExcelWorksheet file,int ESM_index,int ASM_index,int RSM_index,int ZSM_index,int NSM_index)
         {
+            List<WarningTemplates> errorTemp = new List<WarningTemplates>();
             for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
             {
                 if(ESM_index==0)
@@ -431,9 +402,10 @@ namespace DataUpload
             }
             return errorTemp.OrderByDescending(x => x.Row).ToList();
         }
-        public List<ErrorTemplates>HierarchyError(ExcelWorksheet file,int ESM_index, int ASM_index, int RSM_index, int ZSM_index, int NSM_index, List<ErrorTemplates> errorTemp)
+        public List<ErrorTemplates>HierarchyError(ExcelWorksheet file,int ESM_index, int ASM_index, int RSM_index, int ZSM_index, int NSM_index)
         {
-            for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
+            List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
+                for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
             {
                 if(ESM_index==0)
                 {
@@ -442,24 +414,27 @@ namespace DataUpload
                 var flag_ESM = file.Cells[i, ESM_index].Value;
                 if (flag_ESM != null)
                 {
-                    if(ASM_index==0)
+                    if (ASM_index == 0)
                     {
                         ErrorTemplates errors = new ErrorTemplates();
                         errors.ErrorType = "Error Hierachy is broken";
                         errors.Field_1 = "ASM";
-                        errors.Row = i;
-                        errors.ErrorComments = "Field ASM is not present";
+                        errors.ErrorComments = "Header ASM is missing";
                         errorTemp.Add(errors);
+                        break;
                     }
-                    var flag_ASM = file.Cells[i, ASM_index].Value;
-                    if (flag_ASM == null)
+                    else
                     {
-                        ErrorTemplates errors = new ErrorTemplates();
-                        errors.ErrorType = "Error Hierachy is broken";
-                        errors.Field_1 = "ASM";
-                        errors.Row = i;
-                        errors.ErrorComments = "hierarchy is broken for field ASM";
-                        errorTemp.Add(errors);
+                        var flag_ASM = file.Cells[i, ASM_index].Value;
+                        if (flag_ASM == null)
+                        {
+                            ErrorTemplates errors = new ErrorTemplates();
+                            errors.ErrorType = "Error Hierachy is broken";
+                            errors.Field_1 = "ASM";
+                            errors.Row = i;
+                            errors.ErrorComments = "hierarchy is broken for field ASM";
+                            errorTemp.Add(errors);
+                        }
                     }
                 }
 
@@ -473,24 +448,27 @@ namespace DataUpload
                 var flag_ASM = file.Cells[i, ASM_index].Value;
                 if (flag_ASM != null)
                 {
-                    if(RSM_index==0)
+                    if (RSM_index == 0)
                     {
                         ErrorTemplates errors = new ErrorTemplates();
                         errors.ErrorType = "Error Hierachy is broken";
                         errors.Field_1 = "RSM";
-                        errors.Row = i;
-                        errors.ErrorComments = "field RSM is not present";
+                        errors.ErrorComments = "Header RSM is missing";
                         errorTemp.Add(errors);
+                        break;
                     }
-                    var flag_RSM = file.Cells[i, RSM_index].Value;
-                    if (flag_RSM == null)
+                    else
                     {
-                        ErrorTemplates errors = new ErrorTemplates();
-                        errors.ErrorType = "Error Hierachy is broken";
-                        errors.Field_1 = "RSM";
-                        errors.Row = i;
-                        errors.ErrorComments="hierarchy is broken for field RSM";
-                        errorTemp.Add(errors);
+                        var flag_RSM = file.Cells[i, RSM_index].Value;
+                        if (flag_RSM == null)
+                        {
+                            ErrorTemplates errors = new ErrorTemplates();
+                            errors.ErrorType = "Error Hierachy is broken";
+                            errors.Field_1 = "RSM";
+                            errors.Row = i;
+                            errors.ErrorComments = "hierarchy is broken for field RSM";
+                            errorTemp.Add(errors);
+                        }
                     }
                 }
 
@@ -504,26 +482,29 @@ namespace DataUpload
                 var flag_RSM = file.Cells[i, RSM_index].Value;
                 if (flag_RSM != null)
                 {
-                    if(ZSM_index==0)
+                    if (ZSM_index == 0)
                     {
                         ErrorTemplates errors = new ErrorTemplates();
                         errors.ErrorType = "Error Hierachy is broken";
                         errors.Field_1 = "ZSM";
-                        errors.Row = i;
-                        errors.ErrorComments = "field ZSM is not present";
+                        errors.ErrorComments = "Header ZSM is missing";
                         //  errors.LinkRow = i;
                         errorTemp.Add(errors);
+                        break;
                     }
-                    var flag_ZSM = file.Cells[i, ZSM_index].Value;
-                    if (flag_ZSM == null)
+                    else
                     {
-                        ErrorTemplates errors = new ErrorTemplates();
-                        errors.ErrorType = "Error Hierachy is broken";
-                        errors.Field_1 = "ZSM";
-                        errors.Row = i;
-                        errors.ErrorComments = "hierarchy is broken for field ZSM";
-                      //  errors.LinkRow = i;
-                        errorTemp.Add(errors);
+                        var flag_ZSM = file.Cells[i, ZSM_index].Value;
+                        if (flag_ZSM == null)
+                        {
+                            ErrorTemplates errors = new ErrorTemplates();
+                            errors.ErrorType = "Error Hierachy is broken";
+                            errors.Field_1 = "ZSM";
+                            errors.Row = i;
+                            errors.ErrorComments = "hierarchy is broken for field ZSM";
+                            //  errors.LinkRow = i;
+                            errorTemp.Add(errors);
+                        }
                     }
                 }
 
@@ -537,34 +518,38 @@ namespace DataUpload
                 var flag_ZSM = file.Cells[i, ZSM_index].Value;
                 if (flag_ZSM != null)
                 {
-                    if(NSM_index==0)
+                    if (NSM_index == 0)
                     {
                         ErrorTemplates errors = new ErrorTemplates();
                         errors.ErrorType = "Error Hierachy is broken";
                         errors.Field_1 = "NSM";
-                        errors.Row = i;
-                        errors.ErrorComments = "field is nog present for NSM";
-                        //  errors.LinkRow = i;
+                        errors.ErrorComments = "Header NSM is missing";
                         errorTemp.Add(errors);
+                        break;
                     }
-                    var flag_NSM = file.Cells[i, NSM_index].Value;
-                    if (flag_NSM == null)
+                    else
                     {
-                        ErrorTemplates errors = new ErrorTemplates();
-                        errors.ErrorType = "Error Hierachy is broken";
-                        errors.Field_1 = "NSM";
-                        errors.Row = i;
-                        errors.ErrorComments = "hierarchy is broken for field NSM";
-                      //  errors.LinkRow = i;
-                        errorTemp.Add(errors);
+                        var flag_NSM = file.Cells[i, NSM_index].Value;
+                        if (flag_NSM == null)
+                        {
+                            ErrorTemplates errors = new ErrorTemplates();
+                            errors.ErrorType = "Error Hierachy is broken";
+                            errors.Field_1 = "NSM";
+                            errors.Row = i;
+                            errors.ErrorComments = "hierarchy is broken for field NSM";
+                            //  errors.LinkRow = i;
+                            errorTemp.Add(errors);
+                        }
                     }
                 }
 
             }
             return errorTemp.OrderBy(x => x.Row).ToList();
         }
-        public List<ErrorTemplates> CheckPhoneDigit(ExcelWorksheet file,int ESM_flag,List<ErrorTemplates>errorTemp)
+        public List<ErrorTemplates> CheckPhoneDigit(ExcelWorksheet file,int ESM_flag)
         {
+            List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
+
             int phone = 0;
             if (ESM_flag != 0)
             {
@@ -616,8 +601,9 @@ namespace DataUpload
             return errorTemp.OrderBy(x => x.Row).ToList();
 
         }
-        public List<ErrorTemplates> EmailCheck(ExcelWorksheet file ,int columnIndex,string field,List<ErrorTemplates> errorTemp)
+        public List<ErrorTemplates> EmailCheck(ExcelWorksheet file ,int columnIndex,string field)
         {
+            List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
             if (columnIndex != 0)
             {
                 for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
@@ -647,5 +633,92 @@ namespace DataUpload
             }
             return errorTemp.OrderBy(x=>x.Row).ToList();
         }
+        public List<ErrorTemplates> CheckStateAndDistrict(ExcelWorksheet file,int flag_State,int flag_District)
+        {
+            List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
+
+
+            StateDistrict beatDistrict = new StateDistrict();
+            
+            for(int i=file.Dimension.Start.Row+1;i<=file.Dimension.End.Row;i++)
+            {
+                if (flag_State != 0 && flag_District!=0)
+                {
+                    var statevalue = file.Cells[i, flag_State].Value;
+                    var districtValue = file.Cells[i, flag_District].Value;
+                    if (statevalue != null)
+                    {
+                        var newValue = statevalue.ToString().Replace(" ", "").ToLower();
+                        var listState = beatDistrict.GetAllStates();
+                        var boole = listState.Contains(newValue);
+                        if (boole == false)
+                        {
+                            ErrorTemplates error = new ErrorTemplates();
+                            error.ErrorType = "State";
+                            error.ErrorComments = "State field is out of the list";
+                            error.Field_1 = newValue;
+                            error.Row = i;
+                            errorTemp.Add(error);
+                        }
+                        else
+                        {
+                            if(districtValue!=null)
+                            {
+                                var newValue2 = districtValue.ToString().Replace(" ", "").ToLower();
+                                var listDistrict = beatDistrict.GetDistrictsOfState(newValue);
+                                var boole2 = listDistrict.Contains(newValue2);
+                                if(boole2==false)
+                                {
+                                    ErrorTemplates error = new ErrorTemplates();
+                                    error.ErrorType = "District";
+                                    error.ErrorComments = "District field is out of the list for State  "+newValue;
+                                    error.Field_1 = newValue2;
+                                    error.Row = i;
+                                    errorTemp.Add(error);
+                                }
+                            }
+                        }
+                    }
+                }               
+            } 
+            return errorTemp.OrderBy(x => x.Row).ToList();
+        }
+        public List<ErrorTemplates> UniqueProductVariant(List<IGrouping<string, Mapping>> query, int product_index,int variant_index)
+        {
+            List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
+            List<string> List = new List<string>();
+            List<Mapping> maper = new List<Mapping>();
+            if (product_index != 0 && variant_index != 0)
+            {
+                List<List<Mapping>> mappin = new List<List<Mapping>>();
+                foreach (var key in query)
+                {
+                    List<Mapping> tempMap = new List<Mapping>();
+                    foreach (var item in key)
+                    {
+                        Mapping map = new Mapping();
+                        map.c1 = item.c1;
+                        map.row = item.row;
+                        tempMap.Add(map);
+                    }
+                    if(tempMap.Count>1)
+                    {
+                        foreach(var item2 in tempMap)
+                        {
+                            ErrorTemplates error = new ErrorTemplates();
+                            error.ErrorType = "UniqueProductVariantError";
+                            error.Field_1 = item2.row.ToString();
+                            errorTemp.Add(error);
+                        }
+                    }
+                }
+                
+                }
+
+            
+            return errorTemp.OrderBy(x => x.Row).ToList();
+        }
+        
+        
     }
 }

@@ -40,5 +40,38 @@ namespace DataUpload
         public int DistributorLocation { get; set; }
         public int DistributorErpId { get; set; }
         public int DistributorEmailId { get; set; }
+        public int ShopName { get; set; }
+        public int Addres { get; set; }
+        public int Email { get; set; }
+        public int TIN { get; set; }
+        public int PIN { get; set; }
+        public int MarketName { get; set; }
+        public int City { get; set; }
+        public int State { get; set; }
+        public int Country { get; set; }
+        public int ShopErpId { get; set; }
+        public int ShopType { get; set; }
+        public int Segmentation { get; set; }
+        public int OwnersName { get; set; }
+        public int OwnersContactNumber { get; set; }
+        public int IsFocussed { get; set; }
+        public int ConsumerType { get; set; }
+        public int OutletPotential { get; set; }
+        public int CodeId { get; set; }
+        public int PrimaryCategory { get; set; }
+        public int SecondaryCategory { get; set; }
+        public int Product { get; set; }
+        public int Variant { get; set; }
+        public int Price { get; set; }
+        public int Unit { get; set; }
+        public int DisplayCategory { get; set; }
+        public int Image { get; set; }
+        public int Description { get; set; }
+        public int StandardUnitConversionFactor { get; set; }
+        public int StandardUnit { get; set; }
+        public int ProductCode { get; set; }
+        public int VariantCode { get; set; }
+        public int ProductCategory { get; set; }
+        public int BeatDay { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace DataUpload
         public List<ErrorTemplates> Error { get;set; }
         public List<WarningTemplates>Warning { get; set; }
         public ErrorTemplates ShowHeader { get; set; }
-        
+        public WarningTemplates WarnHeaders { get; set; }
     }
 }
