@@ -9,6 +9,11 @@ using OfficeOpenXml;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System.Text.RegularExpressions;
+using FieldAssist.DataAccessLayer.Models.EFModels;
+//using FieldAssist.DataAccessLayer.Repositories;
+using DataUpload.DataUploadRepository;
+using DataUpload.ExcelToObject;
+
 
 namespace DataUpload.Controllers
 {
@@ -22,6 +27,8 @@ namespace DataUpload.Controllers
         {
             return View();
         }
+        //Passive Checks Beat Hierarchy
+        #region
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase file)
         {
@@ -156,653 +163,16 @@ namespace DataUpload.Controllers
                         
                         List<FileHeadersLocationAddtion> list3 = new List<FileHeadersLocationAddtion>();
                         List<FileHeadersBeatPlanAddition> list4 = new List<FileHeadersBeatPlanAddition>();
-                        for (int i = sheet.Dimension.Start.Row; i < sheet.Dimension.End.Row; i++)
-                        {
-                            FileHeadersBeatHierarchy records = new FileHeadersBeatHierarchy();
-                            for (int j = sheet.Dimension.Start.Column - 1; j < sheet.Dimension.End.Column; j++)
-                            {
-                                var value = ((object[,])fileField.Value)[0, j];
-                                if (value != null)
-                                {
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "NSM".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.NSM = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.NSM = "";
-                                            records.Row = i;
-                                        }
-                                        if(records.NSM.Replace(" ", "").Count()>=50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "NSM";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                            
-                                        }
+                        ExcelToObject.ExcelToObject excelToObject = new ExcelToObject.ExcelToObject();
 
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "NSMZone".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.NSMZone = ((object[,])fileField.Value)[i, j].ToString();
-                                        }
-                                        else
-                                        {
-                                            records.NSMZone = "";
-                                        }
-                                        if(records.NSMZone.Replace(" ", "").Count()>=100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "NSMZone";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "NSMEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.NSMEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.NSMEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.NSMEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "NSMEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "NSMSecondaryEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.NSMSecondaryEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.NSMSecondaryEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.NSMSecondaryEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "NSMSecondaryEmaiId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ZSM".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ZSM = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ZSM = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ZSM.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ZSM";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ZSMZone".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ZSMZone = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ZSMZone = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ZSMZone.Replace(" ", "").Count() >= 100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ZSMZone";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ZSMEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ZSMEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ZSMEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ZSMEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ZSMEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ZSMSecondaryEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ZSMSecondaryEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ZSMSecondaryEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ZSMSecondaryEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ZSMSecondaryEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "RSM".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.RSM = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.RSM = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.RSM.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "RSM";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "RSMZone".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.RSMZone = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.RSMZone = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.RSMZone.Replace(" ", "").Count() >=100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "RSMZone";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "RSMEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.RSMEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.RSMEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.RSMEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "RSMEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "RSMSecondaryEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.RSMSecondaryEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.RSMSecondaryEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.RSMSecondaryEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "RSMSecondaryEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ASM".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ASM = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ASM = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ASM.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ASM";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ASMZone".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ASMZone = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ASMZone = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ASMZone.Replace(" ", "").Count() >= 100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ASMZone";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ASMEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ASMEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ASMEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ASMEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ASMEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ASMSecondaryEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ASMSecondaryEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ASMSecondaryEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ASMSecondaryEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ASMSecondaryEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESM".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ESM = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ESM = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ESM.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ESM";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ESMEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ESMEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ESMEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ESMEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMSecondaryEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ESMSecondaryEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ESMSecondaryEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ESMSecondaryEmailId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ESMSecondaryEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMZone".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ESMZone = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ESMZone = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ESMZone.Replace(" ", "").Count() >= 100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ESMZone";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMContactNumber".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ESMContactNumber = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ESMContactNumber = "";
-                                            records.Row = i;
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMHQ".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ESMHQ = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ESMHQ = "";
-                                            records.Row = i;
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ESMErpId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ESMErpId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ESMErpId = "";
-                                            records.Row = i;
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "FinalBeatName".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.FinalBeatName = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.FinalBeatName = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.FinalBeatName.Replace(" ", "").Count() >=100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "FinalBeatName";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "BeatState".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.BeatState = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.BeatState = "";
-                                            records.Row = i;
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "BeatDistrict".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.BeatDistrict = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.BeatDistrict = "";
-                                            records.Row = i;
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "BeatZone".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.BeatZone = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.BeatZone = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.BeatZone.Replace(" ", "").Count() >= 100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "BeatZone";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "BeatErpId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.BeatErpId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.BeatErpId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.BeatErpId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "BeatErpId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "DistributorName".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.DistributorName = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.DistributorName = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.DistributorName.Replace(" ", "").Count() >= 100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "DistributorName";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "DistributorLocation".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.DistributorLocation = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.DistributorLocation = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.DistributorLocation.Replace(" ", "").Count() >= 100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "DistributorLocation";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "DistributorEmailId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.DistributorEmailId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.DistributorEmailId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.DistributorEmailId.Replace(" ", "").Count() >= 100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "DistributorEmailId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "DistributorErpId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.DistributorErpId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.DistributorErpId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.DistributorErpId.Replace(" ", "").Count() >= 100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "DistributorErpId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-                                        }
-                                    }
-                                }
-                            }
-                            list.Add(records);
-                        }
+                        ListandError listerror = new ListandError();
+
+                        listerror=excelToObject.listWithErrorBeatHiearachy(sheet);
+                        list = listerror.listBeatHierarchy;
+                        errorTemp.AddRange(listerror.error);
                         errorTemp.AddRange(mapChecker.Checker(sheet, list, list3, list2,list4));
                         
-                        if (errorTemp != null)
+                       if (errorTemp != null)
                         {
                             allErrors.Error = errorTemp.GroupBy(a => new { a.Row, a.Field_1, a.Field_2, a.ErrorType, a.ErrorComments, a.IncorrectHeaderList }, (key, g) => g.FirstOrDefault()).ToList();
                             allErrors.Warning = warningTemp.OrderBy(x => x.Row).GroupBy(a => new { a.Row, a.Field, a.Comments }, (key, g) => g.FirstOrDefault()).ToList();
@@ -810,76 +180,284 @@ namespace DataUpload.Controllers
                         }
                         //write csv
 
-
-                        MemoryStream memory = new MemoryStream();
-                        StreamWriter streamwiter = new StreamWriter(memory);
-                        var newCsv = new CsvWriter(streamwiter);
-                        newCsv.WriteHeader<FileHeadersBeatHierarchy>();
-
-                        foreach (var item in list)
-                        {
-                            FileHeadersBeatHierarchy temp = new FileHeadersBeatHierarchy();
-                            temp.NSM = item.NSM;
-                            temp.NSMEmailId = item.NSMEmailId;
-                            temp.NSMSecondaryEmailId = item.NSMSecondaryEmailId;
-                            temp.NSMZone = item.NSMZone;
-                            temp.ZSM = item.ZSM;
-                            temp.ZSMEmailId = item.ZSMEmailId;
-                            temp.ZSMSecondaryEmailId = item.ZSMSecondaryEmailId;
-                            temp.ZSMZone = item.ZSMZone;
-                            temp.RSM = item.RSM;
-                            temp.RSMEmailId = item.RSMEmailId;
-                            temp.RSMSecondaryEmailId = item.RSMSecondaryEmailId;
-                            temp.RSMZone = item.RSMZone;
-                            temp.ASM = item.ASM;
-                            temp.ASMEmailId = item.ASMEmailId;
-                            temp.ASMSecondaryEmailId = item.ASMSecondaryEmailId;
-                            temp.ASMZone = item.ASMZone;
-                            temp.ESM = item.ESM;
-                            temp.ESMEmailId = item.ESMEmailId;
-                            temp.ESMSecondaryEmailId = item.ESMSecondaryEmailId;
-                            temp.ESMContactNumber = item.ESMContactNumber;
-                            temp.ESMErpId = item.ESMErpId;
-                            temp.ESMHQ = item.ESMHQ;
-                            temp.ESMZone = item.ESMZone;
-                            temp.FinalBeatName = item.FinalBeatName;
-                            temp.BeatDistrict = item.BeatDistrict;
-                            temp.BeatErpId = item.BeatErpId;
-                            temp.BeatState = item.BeatState;
-                            temp.BeatZone = item.BeatZone;
-                            temp.DistributorName = item.DistributorName;
-                            temp.DistributorEmailId = item.DistributorEmailId;
-                            temp.DistributorLocation = item.DistributorLocation;
-                            temp.DistributorErpId = item.DistributorErpId;
-                            newCsv.WriteRecord<FileHeadersBeatHierarchy>(temp);
-                        }
-                        streamwiter.Flush();
-                        return File(memory.ToArray(), "text/csv", "data.csv");
+                        Session["BeatHierarchy"]=list;
+                        return RedirectToAction("CompanySelect");
+                       
                     }
                     catch (Exception ex)
                     {
                         var c = count;
                         var error = ex;
-                        return View("Error");
+                       return View("Error");
                     }
                 }
             }
             catch (Exception ex)
             {
                 var error = ex;
-                return View("Error");
+               return View("Error");
             }
 
 
             return null;
 
         }
-        //Program for Location Addition
+        #endregion  
+        CompanyDataContext db = new CompanyDataContext();
+        public ActionResult CompanySelect()
+        {
+            List<Company> list = db.Companies.ToList();
+            
+            return View(list);
+        }
+        //BeatHierarchy Addition--Active Checks
+        #region
+        [HttpPost]
+        public ActionResult BeatHierarchyAdditionCheck(string ID )
+        {
+            int? Id = int.Parse(ID);
+            Session["CompanyID"] = Id;
+            List<FileHeadersBeatHierarchy> beatHierarchyList = (List<FileHeadersBeatHierarchy>)Session["BeatHierarchy"];           
+            NSMRepository NSMRepo = new NSMRepository();
+            List<NationalSalesManager> NSMList = NSMRepo.GetNSM(Id);
+            ZSMRepository ZSMRepo = new ZSMRepository();
+            List<ZonalSalesManager> ZSMList = ZSMRepo.GetZSM(Id);
+            RSMRepository RSMRepo = new RSMRepository();
+            List<RegionalSalesManager> RSMList = RSMRepo.GetRSM(Id);
+            ASMRepository ASMRepo = new ASMRepository();
+            List<AreaSalesManager> ASMList = ASMRepo.GetASM(Id);
+            ESMRepository ESMRepo = new ESMRepository();
+            List<ClientEmployee> ESMList = ESMRepo.GetESM(Id);
+            BEATRepository BEATRepo = new BEATRepository();
+            List<LocationBeat> BEATList = BEATRepo.GetBEAT(Id);
+            DistributorRepository DistributorRepo = new DistributorRepository();
+            List<Distributor> DIstributorList = DistributorRepo.GetDistributor(Id);
+            List<FACompanyZone> CompanyZone = db.FACompanyZones.Where(x => x.CompanyId == Id).ToList();
+            List<ErrorTemplates> errorList = new List<ErrorTemplates>();
+            foreach(var item in beatHierarchyList)
+            {
+               
+                if(NSMList.Exists(x=>x.Name==item.NSM))
+                {
+                    ErrorTemplates er = new ErrorTemplates();
+                    er.ErrorComments ="NSM : "+ item.NSM + " already exists cannot be added";
+                    errorList.Add(er);
+                }
+                
+                if(ZSMList.Exists(x=>x.Name==item.ZSM))
+                {
+                    ErrorTemplates er = new ErrorTemplates();
+                    er.ErrorComments = "ZSM : " + item.ZSM + " already exists cannot be added";
+                    errorList.Add(er);
+                }
+                
+                if(RSMList.Exists(x=>x.Name==item.RSM))
+                {
+                    ErrorTemplates er = new ErrorTemplates();
+                    er.ErrorComments = "RSM : " + item.RSM + " already exists cannot be added";
+                    errorList.Add(er);
+                }
+                
+                if(ASMList.Exists(x=>x.Name==item.ASM))
+                {
+                    ErrorTemplates er = new ErrorTemplates();
+                    er.ErrorComments = "ASM : " + item.ASM + " already exists cannot be added";
+                    errorList.Add(er);
+                }
+                
+                if(ESMList.Exists(x=>x.Name==item.ESM))
+                {
+                    ErrorTemplates er = new ErrorTemplates();
+                    er.ErrorComments = "ESM : " + item.ESM + " already exists cannot be added";
+                    errorList.Add(er);
+                }
+               
+                if(BEATList.Exists(x=>x.Name==item.FinalBeatName))
+                {
+                    ErrorTemplates er = new ErrorTemplates();
+                    er.ErrorComments = "FinalBeatName : " + item.FinalBeatName + " already exists cannot be added";
+                    errorList.Add(er);
+                }
+                if (BEATList.Exists(x => x.ErpId == item.BeatErpId) && item.BeatErpId!=null)
+                {
+                    ErrorTemplates er = new ErrorTemplates();
+                    er.ErrorComments = "BeatErpId : " + item.BeatErpId +" cannot be assigned as it already existing ";
+                    errorList.Add(er);
+                }
+
+                if (DIstributorList.Exists(x=>x.Name==item.DistributorName))
+                {
+                    ErrorTemplates er = new ErrorTemplates();
+                    er.ErrorComments = "Distrbutor : " + item.DistributorName + " already exists cannot be added";
+                    errorList.Add(er);
+                }
+                if(CompanyZone.Exists(x=>x.Name==item.ESMZone))
+                {
+                    ErrorTemplates er = new ErrorTemplates();
+                    er.ErrorComments = "ESMZone : " + item.ESMZone + " already exists cannot be added";
+                    errorList.Add(er);
+                }
+            }
+
+            return View(errorList);
+        }
+        public ActionResult BeatHierarchyAddition()
+        {
+            List<FileHeadersBeatHierarchy> list = (List<FileHeadersBeatHierarchy>)Session["BeatHierarchy"];
+            int? id = (int?)Session["CompanyID"];
+            int newId = id ?? default(int);
+            var list1 = list.GroupBy(x => x.NSM);
+
+
+            foreach (var keyitem in list1)
+            {
+                foreach (var item in keyitem)
+                {
+                    NationalSalesManager NSM = new NationalSalesManager
+                    {
+                        Name = keyitem.Key,
+                        EmailId = item.NSMEmailId,
+                        SecondaryEmailId = item.NSMSecondaryEmailId,
+                        Zone = item.NSMZone,
+                        CompanyId = newId
+                    };
+                    NSMRepository NSMRepo = new NSMRepository();
+                    List<NationalSalesManager> NSMList = NSMRepo.GetNSM(newId);
+
+                    if (!NSMList.Exists(x=>x.Name==NSM.Name))
+                    {
+                        NSMRepo.AddNSM(NSM);
+                    }
+                    //Insert Regions
+                    long NSMPk = db.NationalSalesManagers.Where(x => x.Name == item.NSM).Select(x => x.Id).FirstOrDefault();
+
+                    ZonalSalesManager ZSM = new ZonalSalesManager();
+                    ZSM.Name = item.ZSM;
+                    ZSM.EmailId = item.ZSMEmailId;
+                    ZSM.SecondaryEmailId = item.ZSMSecondaryEmailId;
+                    ZSM.Zone = item.ZSMZone;
+                    ZSM.NationalSalesManagerId = NSMPk;
+                    ZSM.CompanyId = newId;
+
+
+                    ZSMRepository ZSMRepo = new ZSMRepository();
+                    List<ZonalSalesManager> ZSMList = ZSMRepo.GetZSM(newId);
+                    if (!ZSMList.Exists(x=>x.Name==ZSM.Name))
+                    {
+                        ZSMRepo.AddZSM(ZSM);
+                    }
+
+                    long ZSMPk = db.ZonalSalesManagers.Where(x => x.Name == item.ZSM).Select(x => x.Id).FirstOrDefault();
+
+                    RegionalSalesManager RSM = new RegionalSalesManager();
+                    RSM.Name = item.RSM;
+                    RSM.EmailId = item.RSMEmailId;
+                    RSM.SecondaryEmailId = item.RSMSecondaryEmailId;
+                    RSM.Zone = item.RSMZone;
+                    RSM.ZonalSalesManagerId = ZSMPk;
+                    RSM.CompanyId = newId;
+
+                    RSMRepository RSMRepo = new RSMRepository();
+                    List<RegionalSalesManager> RSMList = RSMRepo.GetRSM(newId);
+                    if(!RSMList.Exists(x=>x.Name==RSM.Name))
+                    {
+                        RSMRepo.AddRSM(RSM);
+                    }
+
+                    long RSMPk = db.RegionalSalesManagers.Where(x => x.Name == item.RSM).Select(x => x.Id).FirstOrDefault();
+
+                    AreaSalesManager ASM = new AreaSalesManager();
+                    ASM.Name = item.ASM;
+                    ASM.EmailId = item.ASMEmailId;
+                    ASM.SecondaryEmailId = item.ASMSecondaryEmailId;
+                    ASM.Zone = item.ASMZone;
+                    ASM.RegionalSalesManagerId = RSMPk;
+                    ASM.CompanyId = newId;
+
+                    ASMRepository ASMRepo = new ASMRepository();
+                    List<AreaSalesManager> ASMList = ASMRepo.GetASM(newId);
+                    if(!ASMList.Exists(x=>x.Name==ASM.Name))
+                    {
+                        ASMRepo.AddASM(ASM);
+                    }
+
+                    long ASMPk = db.ClientEmployees.Where(x => x.Name == item.ASM).Select(x => x.Id).FirstOrDefault();
+
+                    ClientEmployee ESM = new ClientEmployee();
+                    ESM.Name = item.ESM;
+                    ESM.EmailId = item.ESMEmailId;
+                    ESM.SecondaryEmailId = item.ESMSecondaryEmailId;
+                 //   ESM.Zone = item.ESMZone;
+                    ESM.ClientSideId = item.ESMErpId;
+                    ESM.AreaSalesManagerId = ASMPk;
+                    ESM.Company = newId;
+
+                    ESMRepository ESMRepo = new ESMRepository();
+                    List<ClientEmployee> ESMList = ESMRepo.GetESM(newId);
+                    if(!ESMList.Exists(x=>x.Name==ESM.Name))
+                    {
+                        ESMRepo.AddESM(ESM);
+                    }
+
+                    LocationBeat BEAT = new LocationBeat();
+                    BEAT.Name = item.FinalBeatName;
+                    BEAT.ErpId = item.BeatErpId;
+                    BEAT.City = item.BeatDistrict;
+                    BEAT.State = item.BeatState;
+                    BEAT.DivisionZone = item.BeatZone;
+
+                    BEATRepository BEATRepo = new BEATRepository();
+                    List<LocationBeat> BEATList = BEATRepo.GetBEAT(newId);
+
+                    if(!BEATList.Exists(x=>x.Name==BEAT.Name))
+                    {
+                        BEATRepo.AddBEAT(BEAT);
+                    }
+                    Distributor Distributor = new Distributor();
+                    Distributor.Name = item.DistributorName;
+                    Distributor.EmailId = item.DistributorEmailId;
+                    Distributor.ClientSideId = item.DistributorErpId;
+                    Distributor.Place = item.DistributorLocation;
+
+                    DistributorRepository DistributorRepo = new DistributorRepository();
+                    List<Distributor> DIstributorList = DistributorRepo.GetDistributor(newId);
+
+                    if(!DIstributorList.Exists(x=>x.Name==Distributor.Name))
+                    {
+                        DistributorRepo.AddDistributor(Distributor);
+                    }
+
+                    DistributorBeatMappingRepository DBMRepo = new DistributorBeatMappingRepository();
+                    List<DistributorBeatMapping> DBMList = DBMRepo.GetDistributorBeatMap(newId);
+
+                    long BeatId = db.LocationBeats.Where(x => x.Name == item.FinalBeatName).Select(x => x.Id).FirstOrDefault();
+                    long DistributorId = db.Distributors.Where(x => x.Name == item.DistributorName).Select(x => x.Id).FirstOrDefault();
+
+                    DistributorBeatMapping DBM = new DistributorBeatMapping();
+                    DBM.BeatId = BeatId;
+                    DBM.DistributorId = DistributorId;
+                    DBM.CompanyId = newId;
+
+                    if (!DBMList.Contains(DBM))
+                    {
+                        DBMRepo.AddDistributorBeatMap(DBM);
+                    }
+
+
+                }
+            }
+            return View();
+        }
+        #endregion
+
+
+        //Program for Location Addition Passive Checks..
 
         public ActionResult Upload_LocationAddition()
         {
             return View();
         }
+        #region
         [HttpPost]
         public ActionResult Upload_LocationAddition(HttpPostedFileBase file)
         {
@@ -914,14 +492,21 @@ namespace DataUpload.Controllers
                     WarningfileHeaders.Add("City".ToLower());
                     WarningfileHeaders.Add("State".ToLower());
                     WarningfileHeaders.Add("Country".ToLower());
-                    WarningfileHeaders.Add("ShopCode".ToLower());
                     WarningfileHeaders.Add("ShopType".ToLower());
                     WarningfileHeaders.Add("Segmentation".ToLower());
                     WarningfileHeaders.Add("OwnersName".ToLower());
                     WarningfileHeaders.Add("OwnersContactNumber".ToLower());
                     WarningfileHeaders.Add("FinalBeatName".ToLower());
-                    WarningfileHeaders.Add("BeatErpId".ToLower());
+                    WarningfileHeaders.Add("ShopErpId".ToLower());
+                    WarningfileHeaders.Add("ISFocused".ToLower());
+                    WarningfileHeaders.Add("ConsumerType".ToLower());
+                    WarningfileHeaders.Add("OutletPotential".ToLower());
+                    WarningfileHeaders.Add("CodeId".ToLower());
                     ErrorfileHeaders.Add("FinalBeatName".ToLower());
+                    ErrorfileHeaders.Add("ShopName".ToLower());
+                    ErrorfileHeaders.Add("Market".ToLower());
+                    ErrorfileHeaders.Add("City".ToLower());
+                    ErrorfileHeaders.Add("State".ToLower());
                     try
                     {
                         var xfile = new FileInfo(path);
@@ -956,12 +541,27 @@ namespace DataUpload.Controllers
                             var value = ((object[,])fileField.Value)[0, i];
                             if (value != null)
                             {
-                                string newValue = value.ToString().Trim().Replace(" ", "").ToLower();
-                                if (newValue == "FinalBeatName".ToLower())
-                                {
-                                    headerError.Add(newValue);
-                                }
                                 
+                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "FinalBeatName".ToLower())
+                                {
+                                    headerError.Add(value.ToString().Trim().Replace(" ", "").ToLower());
+                                }                              
+                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "ShopName".ToLower())
+                                {
+                                    headerError.Add(value.ToString().Trim().Replace(" ", "").ToLower());
+                                }
+                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "Market".ToLower()) 
+                                {
+                                    headerError.Add(value.ToString().Trim().Replace(" ", "").ToLower());
+                                }
+                                if(value.ToString().Trim().Replace(" ", "").ToLower()=="City")
+                                {
+                                    headerError.Add(value.ToString().Trim().Replace(" ", "").ToLower());
+                                }
+                                if(value.ToString().Trim().Replace(" ", "").ToLower()=="State")
+                                {
+                                    headerError.Add(value.ToString().Trim().Replace(" ", "").ToLower());
+                                }
                             }
                         }
                         var difference1 = ErrorfileHeaders.Except(headerError);
@@ -980,373 +580,16 @@ namespace DataUpload.Controllers
                         List<FileHeadersBeatHierarchy> list2 = new List<FileHeadersBeatHierarchy>();
                         List<FileHeadersBeatPlanAddition> list4 = new List<FileHeadersBeatPlanAddition>();
 
+                        ExcelToObject.ExcelToObject excelToObject = new ExcelToObject.ExcelToObject();
 
-                        for (int i = sheet.Dimension.Start.Row; i < sheet.Dimension.End.Row; i++)
-                        {
-                            FileHeadersLocationAddtion records = new FileHeadersLocationAddtion();
-                            for (int j = sheet.Dimension.Start.Column - 1; j < sheet.Dimension.End.Column; j++)
-                            {
-                                var value = ((object[,])fileField.Value)[0, j];
-                                if (value != null)
-                                {
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ShopName".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ShopName = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ShopName = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ShopName.Replace(" ", "").Count() >= 100)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ShopName";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
+                        ListandError listerror = new ListandError();
+                        listerror = excelToObject.listErrorLocationAddition(sheet);
 
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "Address".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.Address = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.Address = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.Address.Replace(" ", "").Count() >= 500)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "Address";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
+                        errorTemp.AddRange(listerror.error);
+                        list = listerror.listLocation;
 
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "Email".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.Email = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.Email = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.Email.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "Email";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
 
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "Tin".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.Tin = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.Tin = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.Tin.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "Tin";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "Pin".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.Pin = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.Pin  = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.Pin.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "Pin";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "MarketName".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.MarketName = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.MarketName = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.MarketName.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "MarketName";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "City".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.City = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.City = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.City.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "City";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "State".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.State = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.State = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.State.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "State";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "Country".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.Country = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.Country = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.Country.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "Country";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ShopCode".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ShopCode = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ShopCode = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ShopCode.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ShopCode";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "ShopType".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.ShopType = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.ShopType = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.ShopType.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "ShopType";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "Segmentation".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.Segmentation = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.Segmentation = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.Segmentation.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "Segmentation";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "OwnersName".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.OwnersName = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.OwnersName = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.OwnersName.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "OwnersName";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "OwnersContactNumber".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.OwnersContactNumber = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.OwnersContactNumber = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.OwnersContactNumber.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "OwnersContactNumber";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "FinalBeatName".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.FinalBeatName = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.FinalBeatName = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.FinalBeatName.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "FinalBeatName";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                    if (((object[,])fileField.Value)[0, j].ToString().Trim().Replace(" ", "").ToLower() == "BeatErpId".ToLower())
-                                    {
-                                        if (((object[,])fileField.Value)[i, j] != null)
-                                        {
-                                            records.BeatErpId = ((object[,])fileField.Value)[i, j].ToString();
-                                            records.Row = i;
-                                        }
-                                        else
-                                        {
-                                            records.BeatErpId = "";
-                                            records.Row = i;
-                                        }
-                                        if (records.BeatErpId.Replace(" ", "").Count() >= 50)
-                                        {
-                                            ErrorTemplates temp = new ErrorTemplates();
-                                            temp.ErrorType = "Character Length Error";
-                                            temp.Field_1 = "BeatErpId";
-                                            temp.Row = i;
-                                            errorTemp.Add(temp);
-
-                                        }
-                                    }
-                                }
-                            }
-                            list.Add(records);
-                        }
-
-                                        //    warningTemp = mapChecker.WarningChecks(sheet, warningTemp);//Warnings
+                        //    warningTemp = mapChecker.WarningChecks(sheet, warningTemp);//Warnings
                         errorTemp.AddRange(mapChecker.Checker(sheet,list2,list,list3,list4));//Mapping checking
 
                         if (errorTemp != null)
@@ -1356,34 +599,9 @@ namespace DataUpload.Controllers
                            // allErrors.ShowHeader = null;
                             return View(allErrors);
                         }
-                        MemoryStream memory = new MemoryStream();
-                        StreamWriter streamwiter = new StreamWriter(memory);
-                        var newCsv = new CsvWriter(streamwiter);
-                        newCsv.WriteHeader<FileHeadersLocationAddtion>();
+                        Session["LocationAdditionObjectList"] = list;
 
-                        foreach (var item in list)
-                        {
-                            FileHeadersLocationAddtion temp = new FileHeadersLocationAddtion();
-                            temp.ShopName = item.ShopName;
-                            temp.Address = item.Address;
-                            temp.BeatErpId = item.BeatErpId;
-                            temp.City = item.City;
-                            temp.Country = item.Country;
-                            temp.Email = item.Email;
-                            temp.FinalBeatName = item.FinalBeatName;
-                            temp.MarketName = item.MarketName;
-                            temp.OwnersContactNumber = item.OwnersContactNumber;
-                            temp.OwnersName = item.OwnersName;
-                            temp.Pin = item.Pin;
-                            temp.Segmentation = item.Segmentation;
-                            temp.ShopCode = item.ShopCode;
-                            temp.ShopType = item.ShopType;
-                            temp.State = item.State;
-                            temp.Tin = item.Tin;
-                            newCsv.WriteRecord<FileHeadersLocationAddtion>(temp);
-                        }
-                        streamwiter.Flush();
-                        return File(memory.ToArray(), "text/csv", "data.csv");
+                        return RedirectToAction("CompanySelect");
 
                     }
                     catch
@@ -1400,6 +618,28 @@ namespace DataUpload.Controllers
             }
             return null;
         }
+        #endregion
+            [HttpPost]
+          public ActionResult LocationAddition_AdditionCheck(string ID)
+          {
+            int id = int.Parse(ID);
+            Session["companyId"] = id;
+            List<FileHeadersLocationAddtion> list = (List<FileHeadersLocationAddtion>)Session["LocationAdditionObjectList"];
+
+            LocationAdditionRepository LOCRepo = new LocationAdditionRepository();
+            List<Location> LOCList = LOCRepo.GetLocation(id);
+            List<ErrorTemplates> errorList = new List<ErrorTemplates>();
+
+            foreach(var item in list)
+            {
+
+            }
+            return null;
+
+
+        }
+
+        //Passive Checks ProductAddition
         public ActionResult ProductAddition()
         {
             return View();
@@ -1518,333 +758,22 @@ namespace DataUpload.Controllers
                     List<FileHeadersLocationAddtion> list3 = new List<FileHeadersLocationAddtion>();
                     List<FileHeadersBeatPlanAddition> list4 = new List<FileHeadersBeatPlanAddition>();
 
-                    for (int i = sheet.Dimension.Start.Row+1; i <= sheet.Dimension.End.Row; i++)
-                    {
-                        FileHeadersProductAddition records = new FileHeadersProductAddition();
-                        for (int j = sheet.Dimension.Start.Column; j <= sheet.Dimension.End.Column; j++)
-                        {
-                            var value = sheet.Cells[1, j].Value;
-                            if (value != null)
-                            {
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "PrimaryCategory".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.PrimaryCategory = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.PrimaryCategory = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.PrimaryCategory.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "PrimaryCategory";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
+                    ExcelToObject.ExcelToObject excelToObject = new ExcelToObject.ExcelToObject();
 
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "SecondaryCategory".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.SecondaryCategory = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.SecondaryCategory = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.SecondaryCategory.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "SecondaryCategory";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
+                        ListandError listerror = new ListandError();
 
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "Product".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.Product = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.Product = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.Product.Replace(" ", "").Count() >= 100)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "Product";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
+                        listerror=excelToObject.listErrrorProductAddition(sheet);
+                        list = listerror.listProductAddition;
+                        errorTemp.AddRange(listerror.error);
 
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "Variant".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.Variant = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.Variant = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.Variant.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "Variant";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "Price".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.Price = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.Price = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.Price.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "Price";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "Unit".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.Unit = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.Unit = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.Unit.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "Unit";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "DisplayCategory".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.DisplayCategory = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.DisplayCategory = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.DisplayCategory.Replace(" ", "").Count() >= 30)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "DisplayCategory";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "Image".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.Image = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.Image = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.Image.Replace(" ", "").Count() >= 40)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "Image";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "Description".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.Description = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.Description = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.Description.Replace(" ", "").Count() >= 100)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "Description";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "StandardUnitConversionFactor".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.StandardUnitConversionFactor = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.StandardUnitConversionFactor = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.StandardUnitConversionFactor.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "StandardUnitConversionFactor";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "StandardUnit".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.StandardUnit = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.StandardUnit = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.StandardUnit.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "StandardUnit";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "ProductCode".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.ProductCode = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.ProductCode = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.ProductCode.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "ProductCode";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "VariantCode".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.VariantCode = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.VariantCode = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.VariantCode.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "VariantCode";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "ProductCategory".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.ProductCategory = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.ProductCategory = "";
-                                        records.Row = i;    
-                                    }
-                                    if (records.ProductCategory.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "ProductCategory";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                            }
-                        }
-                        list.Add(records);
-                    }
+                  
                     errorTemp = errorTemp.GroupBy(a => new { a.Row, a.Field_1, a.Field_2, a.ErrorType, a.ErrorComments, a.IncorrectHeaderList }, (key, g) => g.FirstOrDefault()).ToList();
                     
                     errorTemp.AddRange(mapChecker.Checker(sheet,list2,list3,list,list4));
                    
 
 
-
+                    
 
 
                     if (errorTemp.Count() != 0)
@@ -1892,6 +821,9 @@ namespace DataUpload.Controllers
             }
             return null;
         }
+
+        //Passive Checks BeatPlanAddition
+
         public ActionResult BeatPlanAddition()
         {
             return View();
@@ -1987,130 +919,14 @@ namespace DataUpload.Controllers
                     List<FileHeadersBeatHierarchy> list2 = new List<FileHeadersBeatHierarchy>();
                     List<FileHeadersLocationAddtion> list3 = new List<FileHeadersLocationAddtion>();
                     List<FileHeadersBeatPlanAddition> list4 = new List<FileHeadersBeatPlanAddition>();
-                    for (int i = sheet.Dimension.Start.Row + 1; i <= sheet.Dimension.End.Row; i++)
-                    {
-                        FileHeadersBeatPlanAddition records = new FileHeadersBeatPlanAddition();
-                        for (int j = sheet.Dimension.Start.Column; j <= sheet.Dimension.End.Column; j++)
-                        {
-                            var value = sheet.Cells[1, j].Value;
-                            if (value != null)
-                            {
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "ESM".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.ESM = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.ESM = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.ESM.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "PrimaryCategory";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
+                    ExcelToObject.ExcelToObject excelToObject = new ExcelToObject.ExcelToObject();
 
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "FinalBeatName".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.FinalBeatName = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.FinalBeatName = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.FinalBeatName.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "SecondaryCategory";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
+                    ListandError listerror = new ListandError();
 
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "BeatPlanStartDate".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.BeatPlanStartDate = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.BeatPlanStartDate = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.BeatPlanStartDate.Replace(" ", "").Count() >= 100)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "BeatPlanStartDate";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
+                    listerror = excelToObject.listErrrorProductAddition(sheet);
+                    list = listerror.listProductAddition;
+                    errorTemp.AddRange(listerror.error);
 
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "BeatPeriod".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.BeatPeriod = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.BeatPeriod = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.BeatPeriod.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "BeatPeriod";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                if (value.ToString().Trim().Replace(" ", "").ToLower() == "BeatDay".ToLower())
-                                {
-                                    if (sheet.Cells[i, j].Value != null)
-                                    {
-                                        records.BeatDay = sheet.Cells[i, j].Value.ToString();
-                                        records.Row = i;
-                                    }
-                                    else
-                                    {
-                                        records.BeatDay = "";
-                                        records.Row = i;
-                                    }
-                                    if (records.BeatDay.Replace(" ", "").Count() >= 50)
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "Character Length Error";
-                                        temp.Field_1 = "Price";
-                                        temp.Row = i;
-                                        errorTemp.Add(temp);
-
-                                    }
-                                }
-                                
-                            }
-                            list4.Add(records);
-                        }
-                        
-                    }
                     errorTemp = errorTemp.GroupBy(a => new { a.Row, a.Field_1, a.Field_2, a.ErrorType, a.ErrorComments, a.IncorrectHeaderList }, (key, g) => g.FirstOrDefault()).ToList();
 
                     errorTemp.AddRange(mapChecker.Checker(sheet, list2, list3, list,list4));

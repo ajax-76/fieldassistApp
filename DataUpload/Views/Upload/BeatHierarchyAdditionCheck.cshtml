@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ErrorTemplates>
+@{
+    ViewBag.Title = "BeatHierarchyAdditionCheck";
+}
+
+<h2>BeatHierarchyAdditionCheck</h2>
+<div class="errorDiv">
+@if (Model.Count() != 0)
+{
+    <h2>The Following are the List of errors</h2>
+<table class="table">
+    <thead>
+      <tr>
+          <th>
+              <span class="label label-primary">Error List</span>
+          </th>
+      </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ErrorComments)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+    <br />
+    <h2></h2>
+}
+</div>
+@using (Html.BeginForm("BeatHierarchyAddition", "Upload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <h2>Continue to Add</h2>
+    <input id="Add" class="btn-success" type="submit" value="Add" />
+
+}

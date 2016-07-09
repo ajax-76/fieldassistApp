@@ -7,14 +7,12 @@
     <div class="input" style="color:red;">
         <h1 style="text-align:center;"><span class="label label-default">Upload For Passive Checks (Beat and Hierarchy)</span></h1>
         <br />
-        @using (Html.BeginForm("Upload", "Upload", FormMethod.Post
-                                                                            , new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("Upload", "Upload", FormMethod.Post , new { enctype = "multipart/form-data" }))
         {
             <input type="file" name="file" />
             <br />
             <p><span class="label label-warning"> Upload File in xlsx Format </span> </p>
             <br />
-
             <input id="wait" class="btn-success" type="submit" value="upload" />
 
         }

@@ -152,6 +152,10 @@ namespace DataUpload
                     {
                         indexer.ShopName = i + 1;
                     }
+                    if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "ShopErpId".ToLower())
+                    {
+                        indexer.ShopName = i + 1;
+                    }
                     if (((object[,])file.Value)[0, i].ToString().Trim().Replace(" ", "").ToLower() == "PrimaryCategory".ToLower())
                     {
                         indexer.PrimaryCategory = i + 1;
@@ -215,7 +219,7 @@ namespace DataUpload
                 }
             }
             //hierarchy break
-            if(list1!=null)
+            if (list1 != null)
             {
                 foreach (var item in list1)
                 {
@@ -237,7 +241,7 @@ namespace DataUpload
                         temp.Row = item.Row;
                         newError.Add(temp);
                     }
-                    if(item.ZSM=="")
+                    if (item.ZSM == "")
                     {
 
                         ErrorTemplates temp = new ErrorTemplates();
@@ -246,7 +250,7 @@ namespace DataUpload
                         temp.Row = item.Row;
                         newError.Add(temp);
                     }
-                    if(item.ZSMEmailId=="")
+                    if (item.ZSMEmailId == "")
                     {
 
                         ErrorTemplates temp = new ErrorTemplates();
@@ -255,7 +259,7 @@ namespace DataUpload
                         temp.Row = item.Row;
                         newError.Add(temp);
                     }
-                    if(item.RSM=="")
+                    if (item.RSM == "")
                     {
 
                         ErrorTemplates temp = new ErrorTemplates();
@@ -264,7 +268,7 @@ namespace DataUpload
                         temp.Row = item.Row;
                         newError.Add(temp);
                     }
-                    if(item.RSMEmailId=="")
+                    if (item.RSMEmailId == "")
                     {
 
                         ErrorTemplates temp = new ErrorTemplates();
@@ -273,7 +277,7 @@ namespace DataUpload
                         temp.Row = item.Row;
                         newError.Add(temp);
                     }
-                    if(item.ASM=="")
+                    if (item.ASM == "")
                     {
 
                         ErrorTemplates temp = new ErrorTemplates();
@@ -282,7 +286,7 @@ namespace DataUpload
                         temp.Row = item.Row;
                         newError.Add(temp);
                     }
-                    if(item.ASMEmailId=="")
+                    if (item.ASMEmailId == "")
                     {
 
                         ErrorTemplates temp = new ErrorTemplates();
@@ -291,7 +295,7 @@ namespace DataUpload
                         temp.Row = item.Row;
                         newError.Add(temp);
                     }
-                    if(item.ESM=="")
+                    if (item.ESM == "")
                     {
 
                         ErrorTemplates temp = new ErrorTemplates();
@@ -300,7 +304,7 @@ namespace DataUpload
                         temp.Row = item.Row;
                         newError.Add(temp);
                     }
-                    if(item.DistributorName=="")
+                    if (item.DistributorName == "")
                     {
 
                         ErrorTemplates temp = new ErrorTemplates();
@@ -309,7 +313,7 @@ namespace DataUpload
                         temp.Row = item.Row;
                         newError.Add(temp);
                     }
-                    if(item.ESMContactNumber=="")
+                    if (item.ESMContactNumber == "")
                     {
 
                         ErrorTemplates temp = new ErrorTemplates();
@@ -323,7 +327,7 @@ namespace DataUpload
                 //Phone Digits checking
                 newError.AddRange(checks.CheckPhoneDigit(sheet, indexer.ESMContactNumber));
                 //Relationship Check
-                var query1 = list1.GroupBy(x =>x.NSM , x => new Mapping { c1 = x.NSMZone, row = x.Row }).ToList();
+                var query1 = list1.GroupBy(x => x.NSM, x => new Mapping { c1 = x.NSMZone, row = x.Row }).ToList();
                 newError.AddRange(checks.AttributeMapping(query1, indexer.NSM, indexer.NSMZone, "NSM", "NSMZone"));
                 //Nsm to Nsm EmailID
                 var query2 = list1.GroupBy(x => x.NSM, x => new Mapping { c1 = x.NSMEmailId, row = x.Row }).ToList();
@@ -397,9 +401,12 @@ namespace DataUpload
                 //BeatZone to FinalBeatName
                 var query25 = list1.GroupBy(x => x.BeatZone, x => new Mapping { c1 = x.FinalBeatName, row = x.Row }).ToList();
                 newError.AddRange(checks.One2ManyValidationCheck(query25, indexer.BeatZone, indexer.FinalBeatName, "BeatZone", "FinalBeatName"));
+                //BeatName to BeatErpId
+                var query_25 = list1.GroupBy(x => x.FinalBeatName, x => new Mapping { c1 = x.BeatErpId, row = x.Row }).ToList();
+                newError.AddRange(checks.One2ManyValidationCheck(query_25, indexer.FinalBeatName, indexer.BeatErpId, "FinalBeatName", "BeatErpId"));
                 //FinalBeatName to DistributorName
-                var query26 = list1.GroupBy(x => x.FinalBeatName, x => new Mapping { c1 = x.DistributorName, row = x.Row }).ToList();
-                newError.AddRange(checks.One2ManyValidationCheck(query26, indexer.DistributorName, indexer.FinalBeatName, "DistributorName" ,"FinalBeatName"));
+                var query26 = list1.GroupBy(x => x.DistributorName, x => new Mapping { c1 = x.FinalBeatName, row = x.Row }).ToList();
+                newError.AddRange(checks.One2ManyValidationCheck(query26, indexer.DistributorName, indexer.FinalBeatName, "DistributorName", "FinalBeatName"));
                 //FinalBeatName to DistributorLocation
                 var query27 = list1.GroupBy(x => x.FinalBeatName, x => new Mapping { c1 = x.DistributorLocation, row = x.Row }).ToList();
                 newError.AddRange(checks.One2ManyValidationCheck(query27, indexer.DistributorLocation, indexer.FinalBeatName, "DistributorLocation", "FinalBeatName"));
@@ -421,9 +428,15 @@ namespace DataUpload
                 newError.AddRange(checks.EmailCheck(sheet, indexer.ESMEmailId, "ESMEmailId"));
                 newError.AddRange(checks.EmailCheck(sheet, indexer.ESMSecondaryEmailId, "ESMSecondaryEmailId"));
                 newError.AddRange(checks.CheckStateAndDistrict(sheet, indexer.BeatState, indexer.BeatDistrict));
+                //Unique ErpId
+                Random rnd = new Random();
+                var query30 = list1.Select(x => new Mapping { c1 = x.BeatErpId ?? rnd.Next(0,100000).ToString(), row = x.Row }).GroupBy(y => y.c1).Where(y => y.Count() > 1).ToList();
+                newError.AddRange(checks.Unique(query30, indexer.BeatErpId, "BeatErpId"));
+                var query31 = list1.Select(x => new Mapping { c1 = x.ESMErpId ?? rnd.Next(0, 100000).ToString(), row = x.Row }).GroupBy(y => y.c1).Where(y => y.Count() > 1).ToList();
+                newError.AddRange(checks.Unique(query31, indexer.ESMErpId, "ESMErpId"));
             }
 
-            //Checks For Location Addition\
+            //Checks For Location Addition
             if (list2 != null)
             {
                 foreach(var item in list2)
@@ -479,8 +492,21 @@ namespace DataUpload
                     
 
                 }
-                var query= list1.GroupBy(x => x.DistributorName, x => new Mapping { c1 = x.DistributorErpId, row = x.Row }).ToList();
-                newError.AddRange(checks.One2OneValidationCheck(query, indexer.ShopName, indexer.FinalBeatName, "ShopName", "FinalBeatName"));
+                Random rnd = new Random();
+                //     var query= list1.GroupBy(x => x.DistributorName, x => new Mapping { c1 = x.DistributorErpId, row = x.Row }).ToList();
+                var query31 = list2.Select(x => new Mapping { c1 = x.ShopCode ?? rnd.Next(0, 100000).ToString(), row = x.Row }).GroupBy(y => y.c1).Where(y => y.Count() > 1).ToList();
+                //  newError.AddRange(checks.One2OneValidationCheck(query, indexer.ShopName, indexer.FinalBeatName, "ShopName", "ShopErpId"));
+                newError.AddRange(checks.Unique(query31, indexer.ShopErpId, "ShopErpId"));
+                List<Mapping> mapList = new List<Mapping>();
+                foreach(var item in list2)
+                {
+                    Mapping map = new Mapping();
+                    map.c1 = item.ShopName + item.Address + item.MarketName + item.City;
+                    map.row = item.Row;
+                    mapList.Add(map);
+                }
+                var query32 = mapList.Select(x => new Mapping { c1 = x.c1 ?? rnd.Next(0, 100000).ToString(), row = x.row }).GroupBy(y => y.c1).Where(y=>y.Count()>1).ToList();
+                newError.AddRange(checks.Unique(query32, 1, "ShopName,Address,MarketName,City"));
             }
             // Beat State and District
             
@@ -537,12 +563,14 @@ namespace DataUpload
                 
                 var query5 = list3.GroupBy(x => x.ProductCode, x => new Mapping { c1 = x.VariantCode, row = x.Row }).ToList();
                 var query6 = list3.GroupBy(x => x.Product, x => new Mapping { c1 = x.Variant, row = x.Row }).ToList();
+                
                 newError.AddRange(checks.One2ManyValidationCheck(query1, indexer.PrimaryCategory, indexer.SecondaryCategory, "PrimaryCategory", "SecondaryCategory"));
                 newError.AddRange(checks.One2ManyValidationCheck(query2, indexer.SecondaryCategory, indexer.DisplayCategory, "SecondaryCategory", "DisplayCategory"));
                 newError.AddRange(checks.One2ManyValidationCheck(query3, indexer.DisplayCategory, indexer.Product, "DisplayCategory", "Product"));
                 
                 newError.AddRange(checks.One2OneValidationCheck(query5, indexer.ProductCode, indexer.VariantCode, "ProductCode", "VariantCode"));
                 newError.AddRange(checks.UniqueProductVariant(query6, indexer.Product, indexer.Variant));
+                
             }
             if(list4!=null)
             {

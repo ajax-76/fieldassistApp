@@ -9,6 +9,11 @@ namespace DataUpload
 {
     public class MappingValidations
     {
+        public class Rows
+        {
+            public int row1 { get; set; }
+            public int row2 { get; set; }
+        }
         public List<ErrorTemplates> One2ManyValidationCheck(List<IGrouping<string,Mapping>> query1, int flag_coloumn, int map_coloumn, string flagString, string mapString)
         {
             List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
@@ -36,47 +41,41 @@ namespace DataUpload
                     foreach (var item in mappin)
                     {
                         var comparer = item;
-                        var list1 = item.Select(x => x.c1).ToList();
+                        var list1 = item.Select(x => x.c1).Distinct().ToList();
 
                         foreach (var item2 in mappin)
                         {
 
-                            var list2 = item2.Select(x => x.c1).ToList();
+                            var list2 = item2.Select(x => x.c1).Distinct().ToList();
                             if (item != item2)
                             {
-                                var differenceMap = list1.Intersect(list2).ToList();
+                                var differenceMap = list2.Intersect(list1).ToList();
+                                List<Mapping> newItem = new List<Mapping>();
+                                newItem.AddRange(item);
+                                newItem.AddRange(item2);
                                 if (differenceMap.Count() != 0)
                                 {
                                     List<int> q = new List<int>();
-                                    List<int> r = new List<int>();
+                                    List<Rows> r = new List<Rows>();
                                     foreach (var key in differenceMap)
                                     {
-                                        q = item.Where(x => x.c1 == key).Select(x => x.row).ToList();
-                                        r = item2.Where(x => x.c1 == key).Select(x => x.row).ToList();
+                                        q.AddRange(newItem.Where(x => x.c1 == key).Select(x=>x.row).ToList());
+                                        
                                     }
 
 
-                                    foreach (var num in q.Distinct())
+                                    foreach (var num1 in q.Distinct())
                                     {
                                         ErrorTemplates temp = new ErrorTemplates();
                                         temp.ErrorType = "One to Many mapping";
                                         temp.Field_1 = flagString;
                                         temp.Field_2 = mapString;
-                                        temp.Row = num;
+                                        temp.Row = num1;
                                         errorTemp.Add(temp);
                                         
                                     }
 
-                                    foreach (var num in r.Distinct())
-                                    {
-                                        ErrorTemplates temp = new ErrorTemplates();
-                                        temp.ErrorType = "One to Many mapping";
-                                        temp.Field_1 = flagString;
-                                        temp.Field_2 = mapString;
-                                        temp.Row = num;
-                                        errorTemp.Add(temp);
-                                        
-                                    }
+                                    
                                 }
                             }
                         }
@@ -143,8 +142,8 @@ namespace DataUpload
                                 List<int> r = new List<int>();
                                 foreach (var key in differenceMap)
                                 {
-                                    q = item.Where(x => x.c1 == key).Select(x => x.row).ToList();
-                                    r = item2.Where(x => x.c1 == key).Select(x => x.row).ToList();
+                                    q.AddRange(item.Where(x => x.c1 == key).Select(x => x.row).ToList());
+                                    r.AddRange(item2.Where(x => x.c1 == key).Select(x => x.row).ToList());
                                 }
 
 
@@ -416,24 +415,38 @@ namespace DataUpload
                 {
                     if (ASM_index == 0)
                     {
-                        ErrorTemplates errors = new ErrorTemplates();
-                        errors.ErrorType = "Error Hierachy is broken";
-                        errors.Field_1 = "ASM";
-                        errors.ErrorComments = "Header ASM is missing";
-                        errorTemp.Add(errors);
-                        break;
+                        if(RSM_index!=0)
+                        {
+                            var flag_RSM = file.Cells[i, RSM_index].Value;
+                            if(flag_RSM!=null)
+                            {
+                                ErrorTemplates errors = new ErrorTemplates();
+                                errors.ErrorType = "Error Hierachy is broken";
+                                errors.Field_1 = "ASM";
+                                errors.ErrorComments = "Header ASM is missing";
+                                errorTemp.Add(errors);
+                                break;
+                            }
+                        }
                     }
                     else
                     {
                         var flag_ASM = file.Cells[i, ASM_index].Value;
                         if (flag_ASM == null)
                         {
-                            ErrorTemplates errors = new ErrorTemplates();
-                            errors.ErrorType = "Error Hierachy is broken";
-                            errors.Field_1 = "ASM";
-                            errors.Row = i;
-                            errors.ErrorComments = "hierarchy is broken for field ASM";
-                            errorTemp.Add(errors);
+                            if (RSM_index != 0)
+                            {
+                                var flag_RSM = file.Cells[i, RSM_index].Value;
+                                if (flag_RSM != null)
+                                {
+                                    ErrorTemplates errors = new ErrorTemplates();
+                                    errors.ErrorType = "Error Hierachy is broken";
+                                    errors.Field_1 = "ASM";
+                                    errors.ErrorComments = "ASM is not present";
+                                    errorTemp.Add(errors);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -450,24 +463,38 @@ namespace DataUpload
                 {
                     if (RSM_index == 0)
                     {
-                        ErrorTemplates errors = new ErrorTemplates();
-                        errors.ErrorType = "Error Hierachy is broken";
-                        errors.Field_1 = "RSM";
-                        errors.ErrorComments = "Header RSM is missing";
-                        errorTemp.Add(errors);
-                        break;
+                        if(ZSM_index!=0)
+                        {
+                            var flag_ZSM = file.Cells[i, ZSM_index].Value;
+                            if(flag_ZSM!=null)
+                            {
+                                ErrorTemplates errors = new ErrorTemplates();
+                                errors.ErrorType = "Error Hierachy is broken";
+                                errors.Field_1 = "RSM";
+                                errors.Row = i;
+                                errors.ErrorComments = "Header RSM is missing";
+                                errorTemp.Add(errors);
+                            }
+                        }
                     }
                     else
                     {
                         var flag_RSM = file.Cells[i, RSM_index].Value;
                         if (flag_RSM == null)
                         {
-                            ErrorTemplates errors = new ErrorTemplates();
-                            errors.ErrorType = "Error Hierachy is broken";
-                            errors.Field_1 = "RSM";
-                            errors.Row = i;
-                            errors.ErrorComments = "hierarchy is broken for field RSM";
-                            errorTemp.Add(errors);
+                            if(ZSM_index!=0)
+                            {
+                                var flag_ZSM = file.Cells[i, ZSM_index].Value;
+                                if(flag_ZSM!=null)
+                                {
+                                    ErrorTemplates errors = new ErrorTemplates();
+                                    errors.ErrorType = "Error Hierachy is broken";
+                                    errors.Field_1 = "RSM";
+                                    errors.Row = i;
+                                    errors.ErrorComments = "RSM is not present";
+                                    errorTemp.Add(errors);
+                                }
+                            }
                         }
                     }
                 }
@@ -484,66 +511,43 @@ namespace DataUpload
                 {
                     if (ZSM_index == 0)
                     {
-                        ErrorTemplates errors = new ErrorTemplates();
-                        errors.ErrorType = "Error Hierachy is broken";
-                        errors.Field_1 = "ZSM";
-                        errors.ErrorComments = "Header ZSM is missing";
-                        //  errors.LinkRow = i;
-                        errorTemp.Add(errors);
-                        break;
+                        if(NSM_index!=0)
+                        {
+                            var flag_NSM = file.Cells[i, NSM_index].Value;
+                            if(flag_NSM!=null)
+                            {
+                                ErrorTemplates errors = new ErrorTemplates();
+                                errors.ErrorType = "Error Hierachy is broken";
+                                errors.Field_1 = "ZSM";
+                                errors.Row = i;
+                                errors.ErrorComments = "headerZSM is missing";
+                            }
+
+                        }
                     }
                     else
                     {
                         var flag_ZSM = file.Cells[i, ZSM_index].Value;
                         if (flag_ZSM == null)
                         {
-                            ErrorTemplates errors = new ErrorTemplates();
-                            errors.ErrorType = "Error Hierachy is broken";
-                            errors.Field_1 = "ZSM";
-                            errors.Row = i;
-                            errors.ErrorComments = "hierarchy is broken for field ZSM";
-                            //  errors.LinkRow = i;
-                            errorTemp.Add(errors);
+                            if(NSM_index!=0)
+                            {
+                                var flag_NSM = file.Cells[i, NSM_index].Value;
+                                if(flag_NSM!=null)
+                                {
+                                    ErrorTemplates errors = new ErrorTemplates();
+                                    errors.ErrorType = "Error Hierachy is broken";
+                                    errors.Field_1 = "ZSM";
+                                    errors.Row = i;
+                                    errors.ErrorComments = "ZSM is not present";
+                                }
+                            }
                         }
                     }
                 }
 
             }
-            for (int i = file.Dimension.Start.Row + 1; i <= file.Dimension.End.Row; i++)
-            {
-                if(ZSM_index==0)
-                {
-                    break;
-                }
-                var flag_ZSM = file.Cells[i, ZSM_index].Value;
-                if (flag_ZSM != null)
-                {
-                    if (NSM_index == 0)
-                    {
-                        ErrorTemplates errors = new ErrorTemplates();
-                        errors.ErrorType = "Error Hierachy is broken";
-                        errors.Field_1 = "NSM";
-                        errors.ErrorComments = "Header NSM is missing";
-                        errorTemp.Add(errors);
-                        break;
-                    }
-                    else
-                    {
-                        var flag_NSM = file.Cells[i, NSM_index].Value;
-                        if (flag_NSM == null)
-                        {
-                            ErrorTemplates errors = new ErrorTemplates();
-                            errors.ErrorType = "Error Hierachy is broken";
-                            errors.Field_1 = "NSM";
-                            errors.Row = i;
-                            errors.ErrorComments = "hierarchy is broken for field NSM";
-                            //  errors.LinkRow = i;
-                            errorTemp.Add(errors);
-                        }
-                    }
-                }
-
-            }
+            
             return errorTemp.OrderBy(x => x.Row).ToList();
         }
         public List<ErrorTemplates> CheckPhoneDigit(ExcelWorksheet file,int ESM_flag)
@@ -701,7 +705,7 @@ namespace DataUpload
                         map.row = item.row;
                         tempMap.Add(map);
                     }
-                    if(tempMap.Count>1)
+                    if(tempMap.Distinct().Count()!=tempMap.Count())
                     {
                         foreach(var item2 in tempMap)
                         {
@@ -716,6 +720,37 @@ namespace DataUpload
                 }
 
             
+            return errorTemp.OrderBy(x => x.Row).ToList();
+        }
+        public List<ErrorTemplates> Unique( List<IGrouping<string, Mapping>> query,int ErpId,string Column)
+        {
+            List<ErrorTemplates> errorTemp = new List<ErrorTemplates>();
+            if (ErpId!=0)
+            {
+                
+                List<string> List = new List<string>();
+                List<Mapping> maper = new List<Mapping>();
+                List<Mapping> tempMap = new List<Mapping>();
+                foreach (var key in query)
+                {
+                    Mapping map = new Mapping();
+                    map.c1 = key.Key;
+                   
+                    foreach(var item in key)
+                    {
+                        map.row = item.row;
+                    }
+                    maper.Add(map);
+                    
+                }
+                foreach( var item in maper)
+                {
+                    ErrorTemplates error = new ErrorTemplates();
+                    error.ErrorType = "Not Unique "+Column;
+                    error.Field_1 = item.row.ToString();
+                    errorTemp.Add(error);
+                }
+            }
             return errorTemp.OrderBy(x => x.Row).ToList();
         }
         

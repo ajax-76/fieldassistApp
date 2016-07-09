@@ -23,6 +23,10 @@ namespace DataUpload
         public string OwnersContactNumber { get; set; }
         public string FinalBeatName { get; set; }
         public string BeatErpId { get; set; }
+        public string ISFocused { get; set; }
+        public string ConsumerType { get; set; }
+        public string OutletPotential { get; set; }
+        public string CodeId { get; set; }
         public int Row { get; set; }
         
     }

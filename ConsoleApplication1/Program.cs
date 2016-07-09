@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using OfficeOpenXml;
-using DataUpload.Controllers;
+//using DataUpload.Controllers;
 
 
 namespace ConsoleApplication1
@@ -16,8 +16,9 @@ namespace ConsoleApplication1
         {
             ValidationChecker mapChecker = new ValidationChecker();
             List<string> fileHeaders = new List<string>();
-              fileHeaders.Add("NSM");                //---------------------cell1
-              fileHeaders.Add("NSMZone");
+
+            fileHeaders.Add("NSM");                //---------------------cell1
+            fileHeaders.Add("NSMZone");
             fileHeaders.Add("FinalBeatName");
             fileHeaders.Add("ZSM");
             fileHeaders.Add("BeatState");          //---------------------cell25

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<FieldAssist.DataAccessLayer.Models.EFModels.Company>
+@{
+    ViewBag.Title = "CompanySelect";
+}
+
+<h2>CompanySelect</h2>
+
+@using (Html.BeginForm("BeatHierarchyAdditionCheck", "Upload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <select name="ID">
+        <option value="null">Select</option>
+        @foreach(var item in Model)
+        {
+            <option value="@Html.DisplayFor(modeItem=>item.Id)">@Html.DisplayFor(modelItem=>item.Name)</option>
+        }
+    </select>
+    <br />
+    <input id="wait" class="btn-success" type="submit" value="upload" />
+
+}
+    

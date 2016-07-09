@@ -215,11 +215,22 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="columnIndex.cs" />
+    <Compile Include="CompanySelect.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
+    <Compile Include="DataUploadRepository\ASMRepository.cs" />
+    <Compile Include="DataUploadRepository\BEATRepository.cs" />
+    <Compile Include="DataUploadRepository\DistributorBeatMappingRepository.cs" />
+    <Compile Include="DataUploadRepository\DistributorRepository.cs" />
+    <Compile Include="DataUploadRepository\ESMRepository.cs" />
+    <Compile Include="DataUploadRepository\LocationAdditionRepository.cs" />
+    <Compile Include="DataUploadRepository\NSMRepository.cs" />
+    <Compile Include="DataUploadRepository\RSMRepository.cs" />
+    <Compile Include="DataUploadRepository\ZSMRepository.cs" />
     <Compile Include="ErrorTemplates.cs" />
+    <Compile Include="ExcelToObject\ExcelToObject.cs" />
     <Compile Include="FileHeaders.cs" />
     <Compile Include="FileHeadersBeatPlanAddition.cs" />
     <Compile Include="FileHeadersLocationAddtion.cs" />
@@ -228,6 +239,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HeaderCheck.cs" />
+    <Compile Include="ListandError.cs" />
     <Compile Include="Mapping.cs" />
     <Compile Include="MappingValidations.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -258,6 +270,7 @@
     </Content>
     <None Include="Properties\PublishProfiles\ConsoleSample.pubxml" />
     <None Include="Properties\PublishProfiles\DataUploadv1.pubxml" />
+    <None Include="Properties\PublishProfiles\DataUploadV2.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -270,7 +283,10 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Seed Data\fake.txt" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -308,10 +324,12 @@
     <Content Include="Views\Upload\Upload_LocationAddition.cshtml" />
     <Content Include="Views\Upload\ProductAddition.cshtml" />
     <Content Include="Views\Upload\BeatPlanAddition.cshtml" />
+    <Content Include="Views\Upload\CompanySelect.cshtml" />
+    <Content Include="Views\Upload\BeatHierarchyAdditionCheck.cshtml" />
+    <Content Include="Views\Upload\BeatHierarchyAddition.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Seed Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -322,6 +340,14 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Users\Ankit\Source\Repos\FieldAssist_Portal_Old\Field Assist Server\FieldAssist.DataAccessLayer.Models\FieldAssist.DataAccessLayer.Models.csproj">
+      <Project>{0cca00d7-6417-46e7-a310-b581fbf83f78}</Project>
+      <Name>FieldAssist.DataAccessLayer.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Users\Ankit\Source\Repos\FieldAssist_Portal_Old\Field Assist Server\FieldAssist.DataAccessLayer.Repositories\FieldAssist.DataAccessLayer.Repositories.csproj">
+      <Project>{a90de23d-d39a-4b50-ad09-6aa10daad404}</Project>
+      <Name>FieldAssist.DataAccessLayer.Repositories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConsoleApplication1\DataUpload_ConsoleApp.csproj">
       <Project>{c342303d-0a7f-4424-979b-d1e99c2a6c04}</Project>
       <Name>DataUpload_ConsoleApp</Name>
